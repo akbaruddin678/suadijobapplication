@@ -1,0 +1,19 @@
+/* Reset the default margin and padding */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+}
+
+body,
+html {
+  height: 100%;
+  width: 100%;
+  margin: 0; /* Ensures no margin around the body */
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+  background-color: #f5f5f5;
+}

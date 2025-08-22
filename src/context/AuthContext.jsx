@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: 'LOGIN_START' });
     try {
       const response = await fetch(
-        "https://cisdjob-env.eba-kipwaer2.ap-south-1.elasticbeanstalk.com/api/auth/login",
+        "/api/auth/login",
         {
           method: "POST",
           headers: {

@@ -602,3 +602,230 @@ body {
   text-align: center;
   margin-top: 40px;
 }
+
+
+/*  */
+
+/* General styling */
+.testimonials {
+  background-color: #f9fafb; /* Light background color */
+  padding: 50px 0;
+}
+
+.testimonials .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+/* Section header */
+.testimonials .section-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.testimonials .section-header h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.testimonials .section-header p {
+  font-size: 1rem;
+  color: #555;
+  margin: 0;
+}
+
+/* Details cards */
+.details-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.detail-card {
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.detail-card h3 {
+  font-size: 1.25rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.detail-card p {
+  font-size: 1rem;
+  color: #666;
+}
+
+/* Hover effect for cards */
+.detail-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+  .testimonials .section-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .testimonials .section-header p {
+    font-size: 0.875rem;
+  }
+
+  .detail-card h3 {
+    font-size: 1.125rem;
+  }
+
+  .detail-card p {
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .testimonials .section-header h2 {
+    font-size: 1.25rem;
+  }
+
+  .testimonials .section-header p {
+    font-size: 0.75rem;
+  }
+
+  .details-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-card {
+    padding: 15px;
+  }
+
+  .detail-card h3 {
+    font-size: 1rem;
+  }
+
+  .detail-card p {
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 786px) {
+    .card-1{
+        left: -100px !important;
+    }
+    .card-2{
+        right: 140px !important;
+    }
+    .card-3{
+        left: 150px !important;
+    }
+}
+
+/* Hero Section */
+.hero-image {
+  flex: 1;
+  position: relative;
+}
+
+.image-placeholder {
+  position: relative;
+  height: 400px;
+}
+
+.floating-card {
+  position: relative;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  width: 240px;
+  margin-bottom: 20px; /* Adds space between cards */
+}
+
+.floating-card h4 {
+  font-size: 1.125rem;
+  margin-bottom: 8px;
+  color: #1e293b;
+}
+
+.floating-card p {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin-bottom: 8px;
+}
+
+.floating-card span {
+  font-weight: 600;
+  color: #2563eb;
+}
+
+/* Mobile-responsive adjustments */
+@media (max-width: 786px) {
+    .hero .container {
+        flex-direction: column; /* Stacks content */
+        text-align: center; /* Centers text */
+        padding: 0 20px; /* Adds padding on sides for smaller screens */
+    }
+
+    .hero-image {
+        display: flex;
+        flex-direction: column; /* Aligns cards in column */
+        align-items: center; /* Centers the cards */
+        gap: 20px; /* Adds space between cards */
+        width: 100%; /* Ensures the image container fits within the screen */
+    }
+
+    .hero-content {
+        margin-bottom: 40px; /* Adds space below content */
+    }
+
+    .hero-content h1 {
+        font-size: 2rem; /* Adjusts font size for small screens */
+    }
+
+    .floating-card {
+        width: 100%; /* Ensures cards take full width on small screens */
+        max-width: 280px; /* Limits card width to avoid overflow */
+    }
+
+    .card-1, .card-2, .card-3 {
+        position: relative; /* Ensures cards are aligned in column */
+        margin-bottom: 20px; /* Adds space between cards */
+        left: 0; /* Prevents cards from moving outside the container */
+    }
+
+    /* Ensure the hero section doesn't overflow */
+    .hero {
+        padding: 140px 20px 80px; /* Adjusts padding to avoid content overflow */
+        overflow: hidden; /* Prevents overflow */
+    }
+}
+
+/* Fix for 425px and below */
+@media (max-width: 425px) {
+    .hero-image {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Center cards */
+        gap: 15px; /* Reduce gap between cards */
+        width: 100%; /* Ensure no horizontal overflow */
+    }
+
+    .floating-card {
+        width: 90%; /* Reduce card width to avoid overflow */
+        max-width: 260px; /* Adjust max-width to fit content */
+    }
+
+    /* Avoid any horizontal overflow in hero section */
+    .hero {
+        padding: 120px 10px 60px; /* Adjust padding for small screens */
+        overflow: hidden; /* Ensure no horizontal overflow */
+    }
+}

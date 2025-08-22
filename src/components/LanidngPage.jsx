@@ -16,6 +16,26 @@ const LandingPage = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+
+//    const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSmallScreen, setIsSmallScreen] = useState(false); // State to track screen size
+
+
+  // Function to check screen width and update state
+  const checkScreenSize = () => {
+    setIsSmallScreen(window.innerWidth < 768); // You can adjust this breakpoint as needed
+  };
+
+  useEffect(() => {
+    checkScreenSize(); // Check size on mount
+
+    // Add event listener to track window resize
+    window.addEventListener("resize", checkScreenSize);
+
+    // Cleanup on unmount
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
+
   const handleApplyNow = () => {
     navigate("/application");
   };
@@ -24,13 +44,16 @@ const LandingPage = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+
   return (
     <div className="landing-page">
       {/* Header */}
       <header className="header">
         <div className="container">
           <div className="logo">
-            <h2>College of International Skill Developments</h2>
+            <h2>
+              {isSmallScreen ? "CISD" : "College of International Skill Developments"}
+            </h2>
           </div>
           <nav className={`nav ${isMenuOpen ? "nav-open" : ""}`}>
             <div className="nav-buttons">
@@ -221,31 +244,36 @@ const LandingPage = () => {
       </section>
 
       {/* Details Section */}
-      <section id="details" className="testimonials">
-        <div className="container">
-          <div className="section-header">
-            <h2>Employment Details</h2>
-            <p>Clear terms for a rewarding work experience</p>
-          </div>
-          <div className="details-cards">
-            <div className="detail-card">
-              <h3>📝 Contract</h3>
-              <p>2-Year Contract (Renewable)</p>
-            </div>
-            <div className="detail-card">
-              <h3>⏰ Working Hours</h3>
-              <p>9-Hour Shifts + Weekly Off</p>
-            </div>
-            <div className="detail-card">
-              <h3>🎉 Holidays</h3>
-              <p>Paid Public Holidays & Overtime</p>
-            </div>
-          </div>
-        </div>
-      </section>
+    <section id="details" className="testimonials">
+  <div className="container">
+    <div className="section-header">
+      <h2>Employment Details</h2>
+      <p>Clear terms for a rewarding work experience</p>
+    </div>
+    <div className="details-cards">
+      <div className="detail-card">
+        <h3>📝 Contract</h3>
+        <p>2-Year Contract (Renewable)</p>
+      </div>
+      <div className="detail-card">
+        <h3>⏰ Working Hours</h3>
+        <p>9-Hour Shifts + Weekly Off</p>
+      </div>
+      <div className="detail-card">
+        <h3>🎉 Holidays</h3>
+        <p>Paid Public Holidays & Overtime</p>
+      </div>
+      <div className="detail-card">
+        <h3>💰 Salary</h3>
+        <p>Attractive Monthly Salary + Performance Bonuses</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 
       {/* Contact Section */}
-      <section className="cta">
+      {/* <section className="cta">
         <div className="container">
           <div className="cta-content">
             <h2>Ready to join our team in Saudi Arabia?</h2>
@@ -272,7 +300,7 @@ const LandingPage = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Footer */}
       <footer className="footer">

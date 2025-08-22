@@ -97,6 +97,7 @@
 .section-header {
   display: flex;
   align-items: center;
+  justify-content: flex-start;  /* Align items to the left */
   margin-bottom: 2rem;
   padding-bottom: 0.75rem;
   border-bottom: 1px solid var(--border-light);

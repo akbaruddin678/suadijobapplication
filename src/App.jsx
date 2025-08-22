@@ -6,6 +6,7 @@ import AdminLogin from "./components/AdminLogin";
 import AdminDashboard from "./components/AdminDashboard";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
+import LandingPage from "./components/LanidngPage";
 
 function App() {
   return (
@@ -13,7 +14,8 @@ function App() {
       <Router>
         <div className="App">
           <Routes>
-            <Route path="/" element={<ApplicationForm />} />
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/application" element={<ApplicationForm />} />
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route
               path="/admin/dashboard"

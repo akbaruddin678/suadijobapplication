@@ -9,27 +9,44 @@ const AdminDashboard = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalApplications, setTotalApplications] = useState(0);
+  const [statusCounts, setStatusCounts] = useState({
+    Pending: 0,
+    Reviewed: 0,
+    Accepted: 0,
+    Rejected: 0,
+  });
   const [loading, setLoading] = useState(true);
   const [selectedApplication, setSelectedApplication] = useState(null);
+  const [reviewNotes, setReviewNotes] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
   const { logout } = useAuth();
 
-  const fetchApplications = async (page = 1) => {
+  const fetchApplications = async (page = 1, status = statusFilter) => {
     try {
       const token = JSON.parse(localStorage.getItem("user")).token;
-      const response = await fetch(
-        `http://localhost:5000/api/applications?page=${page}&limit=10`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      let url = `http://cisdjob-env.eba-kipwaer2.ap-south-1.elasticbeanstalk.com/api/applications?page=${page}&limit=10`;
+
+      if (status !== "All") {
+        url += `&status=${status}`;
+      }
+
+      const response = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       const data = await response.json();
       setApplications(data.applications);
       setCurrentPage(data.currentPage);
       setTotalPages(data.totalPages);
       setTotalApplications(data.totalApplications);
+
+      // Update status counts if available from API
+      if (data.statusCounts) {
+        setStatusCounts(data.statusCounts);
+      }
+
       setLoading(false);
     } catch (error) {
       console.error("Error fetching applications:", error);
@@ -37,37 +54,68 @@ const AdminDashboard = () => {
     }
   };
 
+  // Fetch status counts separately if not provided with applications
+  const fetchStatusCounts = async () => {
+    try {
+      const token = JSON.parse(localStorage.getItem("user")).token;
+      const response = await fetch(
+        "http://cisdjob-env.eba-kipwaer2.ap-south-1.elasticbeanstalk.com/api/applications/status-counts",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        const counts = await response.json();
+        setStatusCounts(counts);
+      }
+    } catch (error) {
+      console.error("Error fetching status counts:", error);
+    }
+  };
+
   useEffect(() => {
     fetchApplications();
+    fetchStatusCounts();
   }, []);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
-    fetchApplications(page);
+    fetchApplications(page, statusFilter);
   };
 
-  const handleStatusChange = async (id, status) => {
+  const handleStatusChange = async (id, status, notes = "") => {
     try {
       const token = JSON.parse(localStorage.getItem("user")).token;
       const response = await fetch(
-        `http://localhost:5000/api/applications/${id}/status`,
+        `http://cisdjob-env.eba-kipwaer2.ap-south-1.elasticbeanstalk.com/api/applications/${id}/status`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ status }),
+          body: JSON.stringify({ status, reviewNotes: notes }),
         }
       );
 
       if (response.ok) {
-        fetchApplications(currentPage);
+        fetchApplications(currentPage, statusFilter);
+        fetchStatusCounts(); // Refresh status counts
         setSelectedApplication(null);
+        setReviewNotes(""); // Reset review notes
       }
     } catch (error) {
       console.error("Error updating status:", error);
     }
+  };
+
+  const handleFilterChange = (status) => {
+    setStatusFilter(status);
+    setCurrentPage(1);
+    fetchApplications(1, status);
   };
 
   const formatDate = (dateString) => {
@@ -87,7 +135,7 @@ const AdminDashboard = () => {
 
       const token = user.token;
       const response = await fetch(
-        "http://localhost:5000/api/applications/all",
+        "http://cisdjob-env.eba-kipwaer2.ap-south-1.elasticbeanstalk.com/api/applications/all",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -120,7 +168,9 @@ const AdminDashboard = () => {
         "Worked in Saudi Before": app.workedInSaudi,
         "Why work in Saudi": app.whyWorkInSaudi,
         Status: app.status,
+        "Review Notes": app.reviewNotes || "",
         "Applied On": formatDate(app.createdAt),
+        "Last Updated": formatDate(app.updatedAt),
       }));
 
       const worksheet = XLSX.utils.json_to_sheet(excelData);
@@ -171,6 +221,22 @@ const AdminDashboard = () => {
               <span className="stat-number">{totalApplications}</span>
               <span className="stat-label">Total Applications</span>
             </div>
+            <div className="stat-card">
+              <span className="stat-number">{statusCounts.Pending}</span>
+              <span className="stat-label">Pending</span>
+            </div>
+            <div className="stat-card">
+              <span className="stat-number">{statusCounts.Reviewed}</span>
+              <span className="stat-label">Reviewed</span>
+            </div>
+            <div className="stat-card">
+              <span className="stat-number">{statusCounts.Accepted}</span>
+              <span className="stat-label">Accepted</span>
+            </div>
+            <div className="stat-card">
+              <span className="stat-number">{statusCounts.Rejected}</span>
+              <span className="stat-label">Rejected</span>
+            </div>
           </div>
         </div>
 
@@ -190,6 +256,20 @@ const AdminDashboard = () => {
         <div className="applications-list">
           <div className="section-header">
             <h2>Job Applications</h2>
+            <div className="filters">
+              <span>Filter by status:</span>
+              <select
+                value={statusFilter}
+                onChange={(e) => handleFilterChange(e.target.value)}
+                className="status-filter"
+              >
+                <option value="All">All</option>
+                <option value="Pending">Pending</option>
+                <option value="Reviewed">Reviewed</option>
+                <option value="Accepted">Accepted</option>
+                <option value="Rejected">Rejected</option>
+              </select>
+            </div>
             <div className="pagination-info">
               Page {currentPage} of {totalPages} • {applications.length}{" "}
               applications
@@ -200,7 +280,13 @@ const AdminDashboard = () => {
             <div className="empty-state">
               <div className="empty-icon">📋</div>
               <h3>No applications found</h3>
-              <p>There are no job applications to display at this time.</p>
+              <p>
+                There are no job applications to display{" "}
+                {statusFilter !== "All"
+                  ? `with status "${statusFilter}"`
+                  : "at this time"}
+                .
+              </p>
             </div>
           ) : (
             <>
@@ -212,6 +298,7 @@ const AdminDashboard = () => {
                       <th>Name</th>
                       <th>Position</th>
                       <th>Email</th>
+                      <th>City</th>
                       <th>Status</th>
                       <th>Applied On</th>
                       <th>Actions</th>
@@ -223,12 +310,7 @@ const AdminDashboard = () => {
                         <td className="number-col">
                           {(currentPage - 1) * 10 + index + 1}
                         </td>
-                        <td className="applicant-name">
-                          {/* <div className="name-avatar">
-                            {app.fullName.charAt(0).toUpperCase()}
-                          </div> */}
-                          {app.fullName}
-                        </td>
+                        <td className="applicant-name">{app.fullName}</td>
                         <td>
                           <div className="positions-list">
                             {app.positions.map((pos, i) => (
@@ -246,6 +328,7 @@ const AdminDashboard = () => {
                             {app.email}
                           </a>
                         </td>
+                        <td>{app.preferredCity}</td>
                         <td>
                           <span
                             className={`status-badge status-${app.status.toLowerCase()}`}
@@ -313,7 +396,10 @@ const AdminDashboard = () => {
               <div className="detail-header">
                 <h2>Application Details</h2>
                 <button
-                  onClick={() => setSelectedApplication(null)}
+                  onClick={() => {
+                    setSelectedApplication(null);
+                    setReviewNotes("");
+                  }}
                   className="close-btn"
                   aria-label="Close"
                 >
@@ -418,36 +504,72 @@ const AdminDashboard = () => {
                   </div>
                 </div>
 
+                {selectedApplication.reviewNotes && (
+                  <div className="detail-section">
+                    <h3>
+                      <span className="section-icon">📝</span>
+                      Review Notes
+                    </h3>
+                    <div className="review-notes">
+                      <p>{selectedApplication.reviewNotes}</p>
+                    </div>
+                  </div>
+                )}
+
                 <div className="detail-section">
                   <h3>
                     <span className="section-icon">🔄</span>
                     Update Status
                   </h3>
-                  <div className="status-actions">
-                    <button
-                      onClick={() =>
-                        handleStatusChange(selectedApplication._id, "Accepted")
-                      }
-                      className="status-btn accepted"
-                    >
-                      Accept
-                    </button>
-                    <button
-                      onClick={() =>
-                        handleStatusChange(selectedApplication._id, "Reviewed")
-                      }
-                      className="status-btn reviewed"
-                    >
-                      Mark as Reviewed
-                    </button>
-                    <button
-                      onClick={() =>
-                        handleStatusChange(selectedApplication._id, "Rejected")
-                      }
-                      className="status-btn rejected"
-                    >
-                      Reject
-                    </button>
+                  <div className="status-update-section">
+                    <div className="review-notes-input">
+                      <label htmlFor="reviewNotes">Add Review Notes:</label>
+                      <textarea
+                        id="reviewNotes"
+                        value={reviewNotes}
+                        onChange={(e) => setReviewNotes(e.target.value)}
+                        placeholder="Enter your review notes here..."
+                        rows="3"
+                      />
+                    </div>
+                    <div className="status-actions">
+                      <button
+                        onClick={() =>
+                          handleStatusChange(
+                            selectedApplication._id,
+                            "Accepted",
+                            reviewNotes
+                          )
+                        }
+                        className="status-btn accepted"
+                      >
+                        Accept
+                      </button>
+                      <button
+                        onClick={() =>
+                          handleStatusChange(
+                            selectedApplication._id,
+                            "Reviewed",
+                            reviewNotes
+                          )
+                        }
+                        className="status-btn reviewed"
+                      >
+                        Mark as Reviewed
+                      </button>
+                      <button
+                        onClick={() =>
+                          handleStatusChange(
+                            selectedApplication._id,
+                            "Rejected",
+                            reviewNotes
+                          )
+                        }
+                        className="status-btn rejected"
+                      >
+                        Reject
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>

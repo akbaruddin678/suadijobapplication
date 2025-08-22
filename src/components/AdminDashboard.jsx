@@ -24,7 +24,7 @@ const AdminDashboard = () => {
   const fetchApplications = async (page = 1, status = statusFilter) => {
     try {
       const token = JSON.parse(localStorage.getItem("user")).token;
-      let url = `http://cisdjob-env.eba-kipwaer2.ap-south-1.elasticbeanstalk.com/api/applications?page=${page}&limit=10`;
+      let url = `/api/applications?page=${page}&limit=10`;
 
       if (status !== "All") {
         url += `&status=${status}`;
@@ -59,7 +59,7 @@ const AdminDashboard = () => {
     try {
       const token = JSON.parse(localStorage.getItem("user")).token;
       const response = await fetch(
-        "http://cisdjob-env.eba-kipwaer2.ap-south-1.elasticbeanstalk.com/api/applications/status-counts",
+        "/api/applications/status-counts",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -90,7 +90,7 @@ const AdminDashboard = () => {
     try {
       const token = JSON.parse(localStorage.getItem("user")).token;
       const response = await fetch(
-        `http://cisdjob-env.eba-kipwaer2.ap-south-1.elasticbeanstalk.com/api/applications/${id}/status`,
+        `/api/applications/${id}/status`,
         {
           method: "PUT",
           headers: {
@@ -135,7 +135,7 @@ const AdminDashboard = () => {
 
       const token = user.token;
       const response = await fetch(
-        "http://cisdjob-env.eba-kipwaer2.ap-south-1.elasticbeanstalk.com/api/applications/all",
+        "/api/applications/all",
         {
           headers: {
             Authorization: `Bearer ${token}`,

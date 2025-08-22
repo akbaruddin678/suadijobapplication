@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "http://cisdjob-env.eba-kipwaer2.ap-south-1.elasticbeanstalk.com/api/$1"
+      "destination": "https://cisdjob-env.eba-kipwaer2.ap-south-1.elasticbeanstalk.com"
     },
     {
       "source": "/(.*)",

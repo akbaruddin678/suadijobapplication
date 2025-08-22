@@ -110,7 +110,7 @@ const ApplicationForm = () => {
       setLoading(true);
       try {
         const response = await fetch(
-          "https://cisdjob-env.eba-kipwaer2.ap-south-1.elasticbeanstalk.com/api/applications",
+          "http://cisdjob-env.eba-kipwaer2.ap-south-1.elasticbeanstalk.com/api/applications",
           {
             method: "POST",
             headers: {

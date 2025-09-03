@@ -31,14 +31,11 @@ const ProtectedRoute = ({ children }) => {
       if (token && savedUser) {
         try {
           // Verify token with backend (optional)
-          const response = await fetch(
-            "http://localhost:5000/api/auth/verify",
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
+          const response = await fetch("/api/auth/verify", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
 
           if (response.ok) {
             setUser(JSON.parse(savedUser));

@@ -73,13 +73,13 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
     try {
       setLoading(true);
       setError(null);
-      
+
       const token = localStorage.getItem("token");
       if (!token) {
         throw new Error("No authentication token found");
       }
 
-      const response = await fetch("http://localhost:5000/api/applications/all", {
+      const response = await fetch("/api/applications/all", {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -95,20 +95,20 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
       }
 
       const data = await response.json();
-      
+
       // Process data into categories based on jobtitle
       const processedData = {
-        hospitality: data.filter(app => app.jobtitle === "hospitality"),
-        germany: data.filter(app => app.jobtitle === "germany"),
-        civil: data.filter(app => app.jobtitle === "civil"),
-        domestic: data.filter(app => app.jobtitle === "domestic"),
+        hospitality: data.filter((app) => app.jobtitle === "hospitality"),
+        germany: data.filter((app) => app.jobtitle === "germany"),
+        civil: data.filter((app) => app.jobtitle === "civil"),
+        domestic: data.filter((app) => app.jobtitle === "domestic"),
       };
 
       // Apply location filter if user has specific location
       if (safeUser.location !== "all") {
-        Object.keys(processedData).forEach(key => {
+        Object.keys(processedData).forEach((key) => {
           processedData[key] = processedData[key].filter(
-            app => app.city === safeUser.location
+            (app) => app.city === safeUser.location
           );
         });
       }
@@ -127,68 +127,72 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
   }, [safeUser.location]);
 
   const updateApplicationStatus = async (type, id, newStatus) => {
-  try {
-    const token = localStorage.getItem("token");
-    
-    // Convert frontend status to backend format (capitalize first letter)
-    const statusMap = {
-      'pending': 'Pending',
-      'reviewed': 'Reviewed', 
-      'accepted': 'Accepted',
-      'rejected': 'Rejected',
-      'completed': 'Completed'
-    };
-    
-    const backendStatus = statusMap[newStatus] || newStatus;
-    
-    console.log("Updating status:", { frontend: newStatus, backend: backendStatus });
+    try {
+      const token = localStorage.getItem("token");
 
-    const response = await fetch(`http://localhost:5000/api/applications/${id}/status`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ status: backendStatus }),
-    });
+      // Convert frontend status to backend format (capitalize first letter)
+      const statusMap = {
+        pending: "Pending",
+        reviewed: "Reviewed",
+        accepted: "Accepted",
+        rejected: "Rejected",
+        completed: "Completed",
+      };
 
-    if (!response.ok) {
-      let errorMessage = "Failed to update status";
-      try {
-        const errorData = await response.json();
-        errorMessage = errorData.message || errorMessage;
-      } catch (e) {
-        errorMessage = response.statusText || errorMessage;
+      const backendStatus = statusMap[newStatus] || newStatus;
+
+      console.log("Updating status:", {
+        frontend: newStatus,
+        backend: backendStatus,
+      });
+
+      const response = await fetch(`/api/applications/${id}/status`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ status: backendStatus }),
+      });
+
+      if (!response.ok) {
+        let errorMessage = "Failed to update status";
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.message || errorMessage;
+        } catch (e) {
+          errorMessage = response.statusText || errorMessage;
+        }
+        throw new Error(errorMessage);
       }
-      throw new Error(errorMessage);
-    }
 
-    const updatedApplication = await response.json();
+      const updatedApplication = await response.json();
 
-    // Update local state - keep frontend format (lowercase)
-    setApplications(prev => {
-      const updated = { ...prev };
-      const appIndex = (updated[type] || []).findIndex(app => app._id === id);
-      if (appIndex !== -1) {
-        updated[type] = [...updated[type]];
-        updated[type][appIndex] = {
-          ...updated[type][appIndex],
-          status: newStatus, // Keep frontend format
-        };
+      // Update local state - keep frontend format (lowercase)
+      setApplications((prev) => {
+        const updated = { ...prev };
+        const appIndex = (updated[type] || []).findIndex(
+          (app) => app._id === id
+        );
+        if (appIndex !== -1) {
+          updated[type] = [...updated[type]];
+          updated[type][appIndex] = {
+            ...updated[type][appIndex],
+            status: newStatus, // Keep frontend format
+          };
+        }
+        return updated;
+      });
+
+      // Update modal if open
+      if (isModalOpen && selectedApp && selectedApp._id === id) {
+        setSelectedApp((prev) => ({ ...prev, status: newStatus }));
       }
-      return updated;
-    });
-
-    // Update modal if open
-    if (isModalOpen && selectedApp && selectedApp._id === id) {
-      setSelectedApp(prev => ({ ...prev, status: newStatus }));
+    } catch (err) {
+      console.error("Error updating status:", err);
+      alert(`Failed to update status: ${err.message}`);
     }
-
-  } catch (err) {
-    console.error("Error updating status:", err);
-    alert(`Failed to update status: ${err.message}`);
-  }
-};
+  };
 
   const startApplicationProcess = (type, app) => {
     setSelectedProcessApp({ ...app, type });

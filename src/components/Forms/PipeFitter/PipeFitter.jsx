@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import "./ApplicationForm.css";
-import saudiHeroImage from "../assets/react.svg";
+import "./PipeFitter.css";
+import saudiHeroImage from "../../../assets/react.svg";
 
 const ApplicationForm = () => {
   const [formData, setFormData] = useState({
+    jobtitle: "pipefitter",
     fullName: "",
     age: "",
     gender: "",
@@ -26,16 +27,7 @@ const ApplicationForm = () => {
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState(null);
 
-  const positionOptions = [
-    "Domestic Worker",
-    "Household Help",
-    "Nanny / Babysitter",
-    "Private Driver",
-    "Cook / Chef",
-    "Caregiver (Elderly / Special Needs)",
-    "Cleaner (Hourly)",
-    "Other",
-  ];
+  const positionOptions = ["Pipe-Fitter", "Other"];
 
   const showToast = (title, description, type = "success") => {
     setToast({ title, description, type });
@@ -109,16 +101,13 @@ const ApplicationForm = () => {
     if (validateForm()) {
       setLoading(true);
       try {
-        const response = await fetch(
-          "/api/applications",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(formData),
-          }
-        );
+        const response = await fetch("http://localhost:5000/api/applications", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        });
 
         if (response.ok) {
           setSubmitted(true);
@@ -152,12 +141,16 @@ const ApplicationForm = () => {
         <div className="success-card slide-up">
           <div className="success-content">
             <div className="success-icon">✓</div>
-            <h2 className="success-title">Application Submitted Successfully!</h2>
+            <h2 className="success-title">
+              Application Submitted Successfully!
+            </h2>
             <p className="success-description">
-              Thank you for your application. We will review it and get back to you soon.
+              Thank you for your application. We will review it and get back to
+              you soon.
             </p>
             <div className="success-badge">
-              Reference ID: #{Math.random().toString(36).substr(2, 9).toUpperCase()}
+              Reference ID: #
+              {Math.random().toString(36).substr(2, 9).toUpperCase()}
             </div>
           </div>
         </div>
@@ -177,15 +170,19 @@ const ApplicationForm = () => {
 
       {/* Hero Section */}
       <div className="hero-section">
-        <img 
-          src={saudiHeroImage} 
+        <img
+          src={saudiHeroImage}
           alt="Professional opportunity in Saudi Arabia"
           className="hero-image"
         />
         <div className="hero-overlay">
           <div className="hero-content">
-            <h1 className="hero-title">Saudi Arabia Job Application</h1>
-            <p className="hero-subtitle">Domestic Worker Opportunities 2025-26</p>
+            <h1 className="hero-title">
+              Saudi Arabia Job Application For Pipe-Fitter
+            </h1>
+            <p className="hero-subtitle">
+              Domestic Worker Opportunities 2025-26
+            </p>
           </div>
         </div>
       </div>
@@ -202,26 +199,38 @@ const ApplicationForm = () => {
 
           <div className="form-content">
             <form onSubmit={handleSubmit}>
-              
               {/* Personal Information Section */}
               <div className="form-section">
                 <div className="section-header">
                   <div className="section-number">1</div>
-                  <svg className="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  <svg
+                    className="section-icon"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                    />
                   </svg>
                   <h2 className="section-title">Personal Information</h2>
                 </div>
 
                 <div className="form-grid">
+                  <input type="hidden" name="jobtitle" value="pipefitter" />
+
                   <div className="form-group">
                     <label className="form-label" htmlFor="fullName">
-                      Full Name (as per passport/CNIC) <span className="required-asterisk">*</span>
+                      Full Name (as per passport/CNIC){" "}
+                      <span className="required-asterisk">*</span>
                     </label>
                     <input
                       type="text"
                       id="fullName"
-                      className={`form-input ${errors.fullName ? 'error' : ''}`}
+                      className={`form-input ${errors.fullName ? "error" : ""}`}
                       value={formData.fullName}
                       onChange={(e) => handleChange("fullName", e.target.value)}
                       placeholder="Enter your full name"
@@ -239,8 +248,8 @@ const ApplicationForm = () => {
                       type="number"
                       id="age"
                       min="18"
-                      max="65"
-                      className={`form-input ${errors.age ? 'error' : ''}`}
+                      max="40"
+                      className={`form-input ${errors.age ? "error" : ""}`}
                       value={formData.age}
                       onChange={(e) => handleChange("age", e.target.value)}
                       placeholder="Your age"
@@ -262,7 +271,9 @@ const ApplicationForm = () => {
                           name="gender"
                           value="Female"
                           checked={formData.gender === "Female"}
-                          onChange={(e) => handleChange("gender", e.target.value)}
+                          onChange={(e) =>
+                            handleChange("gender", e.target.value)
+                          }
                         />
                         Female
                       </label>
@@ -273,7 +284,9 @@ const ApplicationForm = () => {
                           name="gender"
                           value="Male"
                           checked={formData.gender === "Male"}
-                          onChange={(e) => handleChange("gender", e.target.value)}
+                          onChange={(e) =>
+                            handleChange("gender", e.target.value)
+                          }
                         />
                         Male
                       </label>
@@ -284,7 +297,9 @@ const ApplicationForm = () => {
                           name="gender"
                           value="Other"
                           checked={formData.gender === "Other"}
-                          onChange={(e) => handleChange("gender", e.target.value)}
+                          onChange={(e) =>
+                            handleChange("gender", e.target.value)
+                          }
                         />
                         Other
                       </label>
@@ -296,35 +311,49 @@ const ApplicationForm = () => {
 
                   <div className="form-group">
                     <label className="form-label" htmlFor="currentResidence">
-                      Current Residence (City) <span className="required-asterisk">*</span>
+                      Current Residence (City){" "}
+                      <span className="required-asterisk">*</span>
                     </label>
                     <input
                       type="text"
                       id="currentResidence"
-                      className={`form-input ${errors.currentResidence ? 'error' : ''}`}
+                      className={`form-input ${
+                        errors.currentResidence ? "error" : ""
+                      }`}
                       value={formData.currentResidence}
-                      onChange={(e) => handleChange("currentResidence", e.target.value)}
+                      onChange={(e) =>
+                        handleChange("currentResidence", e.target.value)
+                      }
                       placeholder="Your current city"
                     />
                     {errors.currentResidence && (
-                      <div className="error-message">{errors.currentResidence}</div>
+                      <div className="error-message">
+                        {errors.currentResidence}
+                      </div>
                     )}
                   </div>
 
                   <div className="form-group">
                     <label className="form-label" htmlFor="contactNumber">
-                      Contact Number (with country code) <span className="required-asterisk">*</span>
+                      Contact Number (with country code){" "}
+                      <span className="required-asterisk">*</span>
                     </label>
                     <input
                       type="text"
                       id="contactNumber"
-                      className={`form-input ${errors.contactNumber ? 'error' : ''}`}
+                      className={`form-input ${
+                        errors.contactNumber ? "error" : ""
+                      }`}
                       value={formData.contactNumber}
-                      onChange={(e) => handleChange("contactNumber", e.target.value)}
+                      onChange={(e) =>
+                        handleChange("contactNumber", e.target.value)
+                      }
                       placeholder="+92XXXXXXXXXX"
                     />
                     {errors.contactNumber && (
-                      <div className="error-message">{errors.contactNumber}</div>
+                      <div className="error-message">
+                        {errors.contactNumber}
+                      </div>
                     )}
                   </div>
 
@@ -335,7 +364,7 @@ const ApplicationForm = () => {
                     <input
                       type="email"
                       id="email"
-                      className={`form-input ${errors.email ? 'error' : ''}`}
+                      className={`form-input ${errors.email ? "error" : ""}`}
                       value={formData.email}
                       onChange={(e) => handleChange("email", e.target.value)}
                       placeholder="your.email@example.com"
@@ -347,18 +376,25 @@ const ApplicationForm = () => {
 
                   <div className="form-group">
                     <label className="form-label" htmlFor="passportNumber">
-                      Passport Number <span className="required-asterisk">*</span>
+                      Passport Number/CNIC{" "}
+                      <span className="required-asterisk">*</span>
                     </label>
                     <input
                       type="text"
                       id="passportNumber"
-                      className={`form-input ${errors.passportNumber ? 'error' : ''}`}
+                      className={`form-input ${
+                        errors.passportNumber ? "error" : ""
+                      }`}
                       value={formData.passportNumber}
-                      onChange={(e) => handleChange("passportNumber", e.target.value)}
+                      onChange={(e) =>
+                        handleChange("passportNumber", e.target.value)
+                      }
                       placeholder="Your passport number"
                     />
                     {errors.passportNumber && (
-                      <div className="error-message">{errors.passportNumber}</div>
+                      <div className="error-message">
+                        {errors.passportNumber}
+                      </div>
                     )}
                   </div>
                 </div>
@@ -368,15 +404,26 @@ const ApplicationForm = () => {
               <div className="form-section">
                 <div className="section-header">
                   <div className="section-number">2</div>
-                  <svg className="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0H8m8 0v2a2 2 0 002 2h2a2 2 0 002-2V6zM2 17h20v2a2 2 0 01-2 2H4a2 2 0 01-2-2v-2z" />
+                  <svg
+                    className="section-icon"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0H8m8 0v2a2 2 0 002 2h2a2 2 0 002-2V6zM2 17h20v2a2 2 0 01-2 2H4a2 2 0 01-2-2v-2z"
+                    />
                   </svg>
                   <h2 className="section-title">Job Preferences</h2>
                 </div>
 
                 <div className="form-group full-width">
                   <label className="form-label">
-                    Position Applying For (Multiple choice) <span className="required-asterisk">*</span>
+                    Position Applying For (Multiple choice){" "}
+                    <span className="required-asterisk">*</span>
                   </label>
                   <div className="checkbox-grid">
                     {positionOptions.map((position) => (
@@ -385,7 +432,9 @@ const ApplicationForm = () => {
                           type="checkbox"
                           className="checkbox-input"
                           checked={formData.positions.includes(position)}
-                          onChange={(e) => handlePositionChange(position, e.target.checked)}
+                          onChange={(e) =>
+                            handlePositionChange(position, e.target.checked)
+                          }
                         />
                         {position}
                       </label>
@@ -403,13 +452,19 @@ const ApplicationForm = () => {
                       <input
                         type="text"
                         id="otherPosition"
-                        className={`form-input ${errors.otherPosition ? 'error' : ''}`}
+                        className={`form-input ${
+                          errors.otherPosition ? "error" : ""
+                        }`}
                         value={formData.otherPosition}
-                        onChange={(e) => handleChange("otherPosition", e.target.value)}
+                        onChange={(e) =>
+                          handleChange("otherPosition", e.target.value)
+                        }
                         placeholder="Specify other position"
                       />
                       {errors.otherPosition && (
-                        <div className="error-message">{errors.otherPosition}</div>
+                        <div className="error-message">
+                          {errors.otherPosition}
+                        </div>
                       )}
                     </div>
                   )}
@@ -417,7 +472,8 @@ const ApplicationForm = () => {
 
                 <div className="form-group full-width">
                   <label className="form-label">
-                    Are you willing to relocate and process necessary documents? <span className="required-asterisk">*</span>
+                    Are you willing to relocate and process necessary documents?{" "}
+                    <span className="required-asterisk">*</span>
                   </label>
                   <div className="radio-group">
                     <label className="radio-option">
@@ -427,7 +483,9 @@ const ApplicationForm = () => {
                         name="willingToRelocate"
                         value="Yes"
                         checked={formData.willingToRelocate === "Yes"}
-                        onChange={(e) => handleChange("willingToRelocate", e.target.value)}
+                        onChange={(e) =>
+                          handleChange("willingToRelocate", e.target.value)
+                        }
                       />
                       Yes
                     </label>
@@ -438,7 +496,9 @@ const ApplicationForm = () => {
                         name="willingToRelocate"
                         value="No"
                         checked={formData.willingToRelocate === "No"}
-                        onChange={(e) => handleChange("willingToRelocate", e.target.value)}
+                        onChange={(e) =>
+                          handleChange("willingToRelocate", e.target.value)
+                        }
                       />
                       No
                     </label>
@@ -449,13 +509,17 @@ const ApplicationForm = () => {
                         name="willingToRelocate"
                         value="Other"
                         checked={formData.willingToRelocate === "Other"}
-                        onChange={(e) => handleChange("willingToRelocate", e.target.value)}
+                        onChange={(e) =>
+                          handleChange("willingToRelocate", e.target.value)
+                        }
                       />
                       Other
                     </label>
                   </div>
                   {errors.willingToRelocate && (
-                    <div className="error-message">{errors.willingToRelocate}</div>
+                    <div className="error-message">
+                      {errors.willingToRelocate}
+                    </div>
                   )}
 
                   {formData.willingToRelocate === "Other" && (
@@ -466,13 +530,19 @@ const ApplicationForm = () => {
                       <input
                         type="text"
                         id="otherRelocate"
-                        className={`form-input ${errors.otherRelocate ? 'error' : ''}`}
+                        className={`form-input ${
+                          errors.otherRelocate ? "error" : ""
+                        }`}
                         value={formData.otherRelocate}
-                        onChange={(e) => handleChange("otherRelocate", e.target.value)}
+                        onChange={(e) =>
+                          handleChange("otherRelocate", e.target.value)
+                        }
                         placeholder="Specify your situation"
                       />
                       {errors.otherRelocate && (
-                        <div className="error-message">{errors.otherRelocate}</div>
+                        <div className="error-message">
+                          {errors.otherRelocate}
+                        </div>
                       )}
                     </div>
                   )}
@@ -480,11 +550,27 @@ const ApplicationForm = () => {
 
                 <div className="form-group full-width">
                   <label className="form-label">
-                    <svg className="section-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <svg
+                      className="section-icon"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
                     </svg>
-                    Preferred city for training <span className="required-asterisk">*</span>
+                    Preferred city for training{" "}
+                    <span className="required-asterisk">*</span>
                   </label>
                   <div className="radio-group">
                     <label className="radio-option">
@@ -494,7 +580,9 @@ const ApplicationForm = () => {
                         name="preferredCity"
                         value="Islamabad"
                         checked={formData.preferredCity === "Islamabad"}
-                        onChange={(e) => handleChange("preferredCity", e.target.value)}
+                        onChange={(e) =>
+                          handleChange("preferredCity", e.target.value)
+                        }
                       />
                       Islamabad
                     </label>
@@ -505,7 +593,9 @@ const ApplicationForm = () => {
                         name="preferredCity"
                         value="Lahore"
                         checked={formData.preferredCity === "Lahore"}
-                        onChange={(e) => handleChange("preferredCity", e.target.value)}
+                        onChange={(e) =>
+                          handleChange("preferredCity", e.target.value)
+                        }
                       />
                       Lahore
                     </label>
@@ -516,7 +606,9 @@ const ApplicationForm = () => {
                         name="preferredCity"
                         value="Other"
                         checked={formData.preferredCity === "Other"}
-                        onChange={(e) => handleChange("preferredCity", e.target.value)}
+                        onChange={(e) =>
+                          handleChange("preferredCity", e.target.value)
+                        }
                       />
                       Other
                     </label>
@@ -533,9 +625,13 @@ const ApplicationForm = () => {
                       <input
                         type="text"
                         id="otherCity"
-                        className={`form-input ${errors.otherCity ? 'error' : ''}`}
+                        className={`form-input ${
+                          errors.otherCity ? "error" : ""
+                        }`}
                         value={formData.otherCity}
-                        onChange={(e) => handleChange("otherCity", e.target.value)}
+                        onChange={(e) =>
+                          handleChange("otherCity", e.target.value)
+                        }
                         placeholder="Specify other city"
                       />
                       {errors.otherCity && (
@@ -547,7 +643,8 @@ const ApplicationForm = () => {
 
                 <div className="form-group full-width">
                   <label className="form-label">
-                    Have you ever worked in Saudi Arabia before? <span className="required-asterisk">*</span>
+                    Have you ever worked in Saudi Arabia before?{" "}
+                    <span className="required-asterisk">*</span>
                   </label>
                   <div className="radio-group">
                     <label className="radio-option">
@@ -557,7 +654,9 @@ const ApplicationForm = () => {
                         name="workedInSaudi"
                         value="Yes"
                         checked={formData.workedInSaudi === "Yes"}
-                        onChange={(e) => handleChange("workedInSaudi", e.target.value)}
+                        onChange={(e) =>
+                          handleChange("workedInSaudi", e.target.value)
+                        }
                       />
                       Yes
                     </label>
@@ -568,7 +667,9 @@ const ApplicationForm = () => {
                         name="workedInSaudi"
                         value="No"
                         checked={formData.workedInSaudi === "No"}
-                        onChange={(e) => handleChange("workedInSaudi", e.target.value)}
+                        onChange={(e) =>
+                          handleChange("workedInSaudi", e.target.value)
+                        }
                       />
                       No
                     </label>
@@ -580,13 +681,18 @@ const ApplicationForm = () => {
 
                 <div className="form-group full-width">
                   <label className="form-label" htmlFor="whyWorkInSaudi">
-                    Why do you want to work in Saudi Arabia? <span className="required-asterisk">*</span>
+                    Why do you want to work in Saudi Arabia?{" "}
+                    <span className="required-asterisk">*</span>
                   </label>
                   <textarea
                     id="whyWorkInSaudi"
-                    className={`form-textarea ${errors.whyWorkInSaudi ? 'error' : ''}`}
+                    className={`form-textarea ${
+                      errors.whyWorkInSaudi ? "error" : ""
+                    }`}
                     value={formData.whyWorkInSaudi}
-                    onChange={(e) => handleChange("whyWorkInSaudi", e.target.value)}
+                    onChange={(e) =>
+                      handleChange("whyWorkInSaudi", e.target.value)
+                    }
                     rows={4}
                     placeholder="Please explain your reasons for wanting to work in Saudi Arabia..."
                   />
@@ -594,12 +700,32 @@ const ApplicationForm = () => {
                     <div className="error-message">{errors.whyWorkInSaudi}</div>
                   )}
                 </div>
+
+                <div className="form-group">
+                  <label className="form-label" htmlFor="heardAboutUs">
+                    Where did you hear about us? (Optional)
+                  </label>
+                  <select
+                    id="heardAboutUs"
+                    className="form-input"
+                    value={formData.heardAboutUs || ""}
+                    onChange={(e) =>
+                      handleChange("heardAboutUs", e.target.value)
+                    }
+                  >
+                    <option value="">Select an option</option>
+                    <option value="friend">Friend</option>
+                    <option value="socialMedia">Social Media</option>
+                    <option value="website">Website</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
               </div>
 
               {/* Submit Button */}
               <div className="submit-section">
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   className="submit-button"
                   disabled={loading}
                 >

@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import "./MechanicalForm.css";
+import "./helperjobs.css";
 import saudiHeroImage from "../../../assets/react.svg";
 
 const ApplicationForm = () => {
   const [formData, setFormData] = useState({
-    jobtitle: "mechanical",
+    jobtitle: "helper",
     fullName: "",
     age: "",
     gender: "",
@@ -27,7 +27,13 @@ const ApplicationForm = () => {
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState(null);
 
-  const positionOptions = ["Multi Weilders", "Fabricators", "Fitters", "Other"];
+  const positionOptions = [
+    "Painter",
+    "Tiler/Tile Fixer",
+    "Chip Board/Ply Wood",
+    "General Worker/Helper",
+    "Other",
+  ];
 
   const showToast = (title, description, type = "success") => {
     setToast({ title, description, type });
@@ -178,7 +184,7 @@ const ApplicationForm = () => {
         <div className="hero-overlay">
           <div className="hero-content">
             <h1 className="hero-title">
-              Saudi Arabia Job Application For Mechanical
+              Saudi Arabia Job Application For Domestic
             </h1>
             <p className="hero-subtitle">
               Domestic Worker Opportunities 2025-26
@@ -220,7 +226,7 @@ const ApplicationForm = () => {
                 </div>
 
                 <div className="form-grid">
-                  <input type="hidden" name="jobtitle" value="mechanical" />
+                  <input type="hidden" name="jobtitle" value="helper" />
 
                   <div className="form-group">
                     <label className="form-label" htmlFor="fullName">
@@ -376,7 +382,7 @@ const ApplicationForm = () => {
 
                   <div className="form-group">
                     <label className="form-label" htmlFor="passportNumber">
-                      Passport Number/CNIC{" "}
+                      Passport Number{" "}
                       <span className="required-asterisk">*</span>
                     </label>
                     <input
@@ -699,25 +705,6 @@ const ApplicationForm = () => {
                   {errors.whyWorkInSaudi && (
                     <div className="error-message">{errors.whyWorkInSaudi}</div>
                   )}
-                </div>
-                <div className="form-group">
-                  <label className="form-label" htmlFor="heardAboutUs">
-                    Where did you hear about us? (Optional)
-                  </label>
-                  <select
-                    id="heardAboutUs"
-                    className="form-input"
-                    value={formData.heardAboutUs || ""}
-                    onChange={(e) =>
-                      handleChange("heardAboutUs", e.target.value)
-                    }
-                  >
-                    <option value="">Select an option</option>
-                    <option value="friend">Friend</option>
-                    <option value="socialMedia">Social Media</option>
-                    <option value="website">Website</option>
-                    <option value="other">Other</option>
-                  </select>
                 </div>
               </div>
 

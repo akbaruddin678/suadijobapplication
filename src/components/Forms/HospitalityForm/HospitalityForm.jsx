@@ -4,7 +4,7 @@ import saudiHeroImage from "../../../assets/react.svg";
 
 const ApplicationForm = () => {
   const [formData, setFormData] = useState({
-    jobtitle: "hospitality-job",
+    jobtitle: "hospitality",
     fullName: "",
     age: "",
     gender: "",
@@ -69,7 +69,7 @@ const ApplicationForm = () => {
     const newErrors = {};
 
     if (!formData.fullName.trim()) newErrors.fullName = "Full name is required";
-    if (!formData.age || Number(formData.age) < 18 || Number(formData.age) > 65)
+    if (!formData.age || Number(formData.age) < 18 || Number(formData.age) > 40)
       newErrors.age = "Age must be between 18 and 65";
     if (!formData.gender) newErrors.gender = "Gender is required";
     if (!formData.currentResidence.trim())
@@ -229,7 +229,7 @@ const ApplicationForm = () => {
                 </div>
 
                 <div className="form-grid">
-                  <input type="hidden" name="jobtitle" value="Pipe-Fitter" />
+                  <input type="hidden" name="jobtitle" value="hospitality" />
 
                   <div className="form-group">
                     <label className="form-label" htmlFor="fullName">

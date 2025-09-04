@@ -9,7 +9,9 @@ import {
   faGlobeEurope,
   faArrowRight,
   faBuilding,
-  faTools
+  faTools,
+  faPersonDigging,
+  faScissors
 } from '@fortawesome/free-solid-svg-icons'
 import './JobSelection.css'
 
@@ -77,6 +79,24 @@ const JobSelection = () => {
       path: 'application-pipefitter',
       color: '#5a67d8',
       gradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)'
+    },
+    {
+      id: "tailor/ironer",
+      title: "Tailor and Ironer",
+      description: "Apply for the jobs in Saudia",
+      icon: faScissors,
+      path: "application-tailor/ironer",
+      color: "#f7971e",
+      gradient: "linear-gradient(135deg, #f7971e 0%, #ffd200 100%)",
+    },
+    {
+      id: "Helping Jobs",
+      title: "Helper Jobs in Saudi Arabia",
+      description: "Painter, Tiler, Woodworker & Helper Jobs in Saudi Arabia",
+      icon: faPersonDigging,
+      path: "application-helperjobs",
+      color: "#5a67d8",
+      gradient: "linear-gradient(135deg, #3a7bd5 0%, #3a6073 100%)",
     },
   ]
 

@@ -12,6 +12,8 @@ import ApplicationFormCivil from "./components/Forms/CivilForm/CivilForm.jsx";
 import ApplicationFormGermany from "./components/Forms/GermanyForm/GermanyForm.jsx";
 import ApplicationFormMechanical from './components/Forms/MechanicalForm/MechanicalForm.jsx'
 import ApplicationFormPipeFitter from './components/Forms/PipeFitter/PipeFitter.jsx'
+import ApplicationFormTailorIroner from "./components/Forms/TailorIroner/TailorIroner.jsx";
+import ApplicationFormHelpers from "./components/Forms/hHelperJobs/helperjobs.jsx";
 import LandingPage from "./components/Home/LanidngPage.jsx";
 import JobSelection from "./components/JobSelection/JobSelection.jsx";
 import AdminDashboard from "./components/Home/Dashboard/AdminDashboard.jsx";
@@ -118,6 +120,14 @@ function App() {
             <Route
               path="application-pipefitter"
               element={<ApplicationFormPipeFitter />}
+            />
+            <Route
+              path="application-pipefitter"
+              element={<ApplicationFormTailorIroner />}
+            />
+            <Route
+              path="application-pipefitter"
+              element={<ApplicationFormHelpers />}
             />
           </Route>
 

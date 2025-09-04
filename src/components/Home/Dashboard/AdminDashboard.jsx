@@ -1,5 +1,5 @@
 // AdminDashboard.jsx
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
 import {
   FaBellConcierge,
   FaIndustry,
@@ -45,6 +45,10 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
     germany: [],
     civil: [],
     domestic: [],
+    tailoriron: [],
+    pipefitter: [],
+    mechanical: [],
+    helper: [],
   });
 
   const [loading, setLoading] = useState(true);
@@ -69,6 +73,10 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
   // Mobile sidebar
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  const [isSavingComment, setIsSavingComment] = useState(false);
+
+  const commentTimeout = useRef(null);
+
   const fetchApplications = async () => {
     try {
       setLoading(true);
@@ -79,12 +87,15 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
         throw new Error("No authentication token found");
       }
 
-      const response = await fetch("/api/applications/all", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        "/api/applications/all",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (!response.ok) {
         if (response.status === 401) {
@@ -102,6 +113,10 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
         germany: data.filter((app) => app.jobtitle === "germany"),
         civil: data.filter((app) => app.jobtitle === "civil"),
         domestic: data.filter((app) => app.jobtitle === "domestic"),
+        tailoriron: data.filter((app) => app.jobtitle === "tailoriron"),
+        pipefitter: data.filter((app) => app.jobtitle === "pipefitter"),
+        mechanical: data.filter((app) => app.jobtitle === "mechanical"),
+        helper: data.filter((app) => app.jobtitle === "helper"),
       };
 
       // Apply location filter if user has specific location
@@ -125,6 +140,119 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
   useEffect(() => {
     fetchApplications();
   }, [safeUser.location]);
+
+  // Replace the updateApplicationComment function with this:
+  const updateApplicationComment = async (type, id, comment) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
+      // First update the backend
+      const response = await fetch(
+        `/api/applications/${id}/comment`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ comment }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(
+          errorData.message || `Server error: ${response.status}`
+        );
+      }
+
+      // Then update local state
+      setApplications((prev) => {
+        const updated = { ...prev };
+        updated[type] = (updated[type] || []).map((app) =>
+          app._id === id ? { ...app, comment } : app
+        );
+        return updated;
+      });
+
+      // Also update selectedApp if it's the current one
+      if (selectedApp && selectedApp._id === id) {
+        setSelectedApp((prev) => ({ ...prev, comment }));
+      }
+
+      return true;
+    } catch (err) {
+      console.error("Comment save error:", err);
+      throw err;
+    }
+  };
+
+  // Remove the commentDraft state and related functions
+  // Replace the openModal and closeModal functions with these:
+
+  const openModal = (type, app) => {
+    setSelectedType(type);
+    setSelectedApp(app);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedApp(null);
+    setSelectedType(null);
+  };
+
+  // Add debouncing to prevent too many API calls
+  const handleCommentChange = async (e) => {
+    const newComment = e.target.value;
+    setSelectedApp((prev) => ({ ...prev, comment: newComment }));
+
+    // Clear previous timeout
+    if (commentTimeout.current) {
+      clearTimeout(commentTimeout.current);
+    }
+
+    // Set new timeout for saving (1 second delay)
+    commentTimeout.current = setTimeout(async () => {
+      if (selectedApp && selectedType) {
+        setIsSavingComment(true);
+        try {
+          await updateApplicationComment(
+            selectedType,
+            selectedApp._id,
+            newComment
+          );
+        } catch (err) {
+          alert(`Failed to save comment: ${err.message}`);
+          // Revert to original comment if save fails
+          setSelectedApp((prev) => ({ ...prev, comment: selectedApp.comment }));
+        } finally {
+          setIsSavingComment(false);
+        }
+      }
+    }, 3000);
+  };
+
+  // Also add a cleanup effect to clear the timeout when component unmounts
+  useEffect(() => {
+    return () => {
+      if (commentTimeout.current) {
+        clearTimeout(commentTimeout.current);
+      }
+    };
+  }, []);
+  // // Update the textarea in the modal to use commentDraft
+  // <textarea
+  //   id="comment"
+  //   className="comment-box"
+  //   rows="3"
+  //   placeholder="Write your comments here..."
+  //   value={commentDraft}
+  //   onChange={(e) => setCommentDraft(e.target.value)}
+  // />;
 
   const updateApplicationStatus = async (type, id, newStatus) => {
     try {
@@ -206,13 +334,19 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
   );
 
   const cities = useMemo(() => {
-    const set = new Set(allApplications.map(a => a.city).filter(Boolean));
+    const set = new Set(allApplications.map((a) => a.city).filter(Boolean));
     return ["all", ...Array.from(set)];
   }, [allApplications]);
 
   const statusCounts = useMemo(() => {
-    const tally = { pending: 0, reviewed: 0, accepted: 0, rejected: 0, completed: 0 };
-    allApplications.forEach(a => {
+    const tally = {
+      pending: 0,
+      reviewed: 0,
+      accepted: 0,
+      rejected: 0,
+      completed: 0,
+    };
+    allApplications.forEach((a) => {
       if (tally[a.status] !== undefined) tally[a.status]++;
     });
     return tally;
@@ -223,14 +357,14 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
     let out = list;
 
     if (statusFilter !== "all") {
-      out = out.filter(a => a.status === statusFilter);
+      out = out.filter((a) => a.status === statusFilter);
     }
     if (cityFilter !== "all") {
-      out = out.filter(a => a.city === cityFilter);
+      out = out.filter((a) => a.city === cityFilter);
     }
     if (query.trim()) {
       const q = query.toLowerCase();
-      out = out.filter(a => {
+      out = out.filter((a) => {
         const name = (a.fullName || "").toLowerCase();
         const email = (a.email || "").toLowerCase();
         const contact = (a.contactNumber || "").toLowerCase();
@@ -253,7 +387,7 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
       const dir = sortDir === "asc" ? 1 : -1;
       const av = a[sortKey] ?? "";
       const bv = b[sortKey] ?? "";
-      
+
       if (sortKey === "createdAt" || sortKey === "submissionDate") {
         return (new Date(av) - new Date(bv)) * dir;
       }
@@ -300,6 +434,34 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
       value: applications.domestic.length,
       color: "domestic",
     },
+    {
+      key: "tailoriron",
+      icon: <FaHouse />,
+      title: "Tailor Applications",
+      value: applications.tailoriron.length,
+      color: "tailoriron",
+    },
+    {
+      key: "pipefitter",
+      icon: <FaHouse />,
+      title: "Pipe Fitter Applications",
+      value: applications.pipefitter.length,
+      color: "pipefitter",
+    },
+    {
+      key: "helper",
+      icon: <FaHouse />,
+      title: "Helper Applications",
+      value: applications.helper.length,
+      color: "helper",
+    },
+    {
+      key: "mechanical",
+      icon: <FaHouse />,
+      title: "Mechanical Applications",
+      value: applications.mechanical.length,
+      color: "mechanical",
+    },
   ];
 
   const sortLabel = (key) =>
@@ -314,7 +476,7 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
 
   const toggleSort = (key) => {
     if (sortKey === key) {
-      setSortDir(d => (d === "asc" ? "desc" : "asc"));
+      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
     } else {
       setSortKey(key);
       setSortDir("asc");
@@ -336,39 +498,39 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
     ];
 
     const data = applyListFilters(applications[type] || []);
-    const rows = data.map(a => ({
+    const rows = data.map((a) => ({
       "Form Type": type,
-      "Name": a.fullName || "",
-      "Age": a.age ?? "",
-      "Contact": a.contactNumber || "",
-      "Email": a.email || "",
+      Name: a.fullName || "",
+      Age: a.age ?? "",
+      Contact: a.contactNumber || "",
+      Email: a.email || "",
       "Position(s)": Array.isArray(a.positions)
         ? a.positions.join(", ")
         : a.position || "",
-      "Date": a.createdAt ? new Date(a.createdAt).toLocaleDateString() : "",
-      "City": a.city || "",
-      "Status": a.status || "",
+      Date: a.createdAt ? new Date(a.createdAt).toLocaleDateString() : "",
+      City: a.city || "",
+      Status: a.status || "",
     }));
 
     const ws = utils.json_to_sheet(rows, { header: headers });
-    ws["!cols"] = headers.map(h => ({ wch: Math.max(12, h.length + 2) }));
+    ws["!cols"] = headers.map((h) => ({ wch: Math.max(12, h.length + 2) }));
     const wb = utils.book_new();
     utils.book_append_sheet(wb, ws, `${type[0].toUpperCase()}${type.slice(1)}`);
     writeFile(wb, `${type}-applications.xlsx`);
   };
 
   // Modal controls
-  const openModal = (type, app) => {
-    setSelectedType(type);
-    setSelectedApp(app);
-    setIsModalOpen(true);
-  };
+  // const openModal = (type, app) => {
+  //   setSelectedType(type);
+  //   setSelectedApp(app);
+  //   setIsModalOpen(true);
+  // };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setSelectedApp(null);
-    setSelectedType(null);
-  };
+  // const closeModal = () => {
+  //   setIsModalOpen(false);
+  //   setSelectedApp(null);
+  //   setSelectedType(null);
+  // };
 
   const DetailRow = ({ label, value }) => (
     <div className="detail-row">
@@ -380,14 +542,14 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
   // If we're viewing the application process, show that component
   if (viewingProcess && selectedProcessApp) {
     return (
-      <ApplicationProcess 
+      <ApplicationProcess
         application={selectedProcessApp}
         onBack={() => setViewingProcess(false)}
         onComplete={() => {
           setViewingProcess(false);
           updateApplicationStatus(
-            selectedProcessApp.type, 
-            selectedProcessApp._id, 
+            selectedProcessApp.type,
+            selectedProcessApp._id,
             "completed"
           );
         }}
@@ -435,7 +597,10 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
         <div className="header-right">
           <div className="filter-chip">
             <span>Status</span>
-            <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)}>
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+            >
               <option value="all">All</option>
               <option value="pending">Pending</option>
               <option value="reviewed">Reviewed</option>
@@ -446,8 +611,11 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
           </div>
           <div className="filter-chip">
             <span>City</span>
-            <select value={cityFilter} onChange={e => setCityFilter(e.target.value)}>
-              {cities.map(c => (
+            <select
+              value={cityFilter}
+              onChange={(e) => setCityFilter(e.target.value)}
+            >
+              {cities.map((c) => (
                 <option key={c} value={c}>
                   {c[0].toUpperCase() + c.slice(1)}
                 </option>
@@ -461,9 +629,13 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
               onClick={() => toggleSort(sortKey)}
               title={`Toggle sort on ${sortLabel(sortKey)}`}
             >
-              {sortLabel(sortKey)} {sortDir === "asc" ? <FaChevronUp /> : <FaChevronDown />}
+              {sortLabel(sortKey)}{" "}
+              {sortDir === "asc" ? <FaChevronUp /> : <FaChevronDown />}
             </button>
-            <select value={sortKey} onChange={e => setSortKey(e.target.value)}>
+            <select
+              value={sortKey}
+              onChange={(e) => setSortKey(e.target.value)}
+            >
               <option value="createdAt">Date</option>
               <option value="fullName">Name</option>
               <option value="age">Age</option>
@@ -475,7 +647,7 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
       </div>
 
       <div className="stats-grid">
-        {statCards.map(c => (
+        {statCards.map((c) => (
           <div key={c.key} className={`stat-card ${c.color} card`}>
             <div className="stat-icon">{c.icon}</div>
             <div className="stat-content">
@@ -524,17 +696,27 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
           <table className="table">
             <thead>
               <tr>
-                <th onClick={() => toggleSort("fullName")} role="button">Name</th>
+                <th onClick={() => toggleSort("fullName")} role="button">
+                  Name
+                </th>
                 <th>Position</th>
                 <th className="hide-sm">Form Type</th>
-                <th onClick={() => toggleSort("createdAt")} role="button">Date</th>
-                <th onClick={() => toggleSort("city")} role="button" className="hide-md">City</th>
+                <th onClick={() => toggleSort("createdAt")} role="button">
+                  Date
+                </th>
+                <th
+                  onClick={() => toggleSort("city")}
+                  role="button"
+                  className="hide-md"
+                >
+                  City
+                </th>
                 <th>Status</th>
                 <th className="hide-sm">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {filteredRecentHospitality.map(app => (
+              {filteredRecentHospitality.map((app) => (
                 <tr
                   key={`hosp-${app._id}`}
                   className="clickable-row"
@@ -546,23 +728,33 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
                       ? app.positions.join(", ")
                       : app.position || "N/A"}
                   </td>
-                  <td data-label="Form" className="hide-sm">Hospitality</td>
-                  <td data-label="Date">
-                    {app.createdAt ? new Date(app.createdAt).toLocaleDateString() : "N/A"}
+                  <td data-label="Form" className="hide-sm">
+                    Hospitality
                   </td>
-                  <td data-label="City" className="hide-md">{app.city}</td>
+                  <td data-label="Date">
+                    {app.createdAt
+                      ? new Date(app.createdAt).toLocaleDateString()
+                      : "N/A"}
+                  </td>
+                  <td data-label="City" className="hide-md">
+                    {app.city}
+                  </td>
                   <td data-label="Status">
                     <StatusPill status={app.status} />
                   </td>
                   <td
                     className="hide-sm"
-                    onClick={e => e.stopPropagation()}
+                    onClick={(e) => e.stopPropagation()}
                     data-label="Actions"
                   >
                     <select
                       value={app.status}
-                      onChange={e =>
-                        updateApplicationStatus("hospitality", app._id, e.target.value)
+                      onChange={(e) =>
+                        updateApplicationStatus(
+                          "hospitality",
+                          app._id,
+                          e.target.value
+                        )
                       }
                       className="status-select"
                     >
@@ -598,6 +790,10 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
       germany: "Germany",
       civil: "Civil",
       domestic: "Domestic",
+      mechanical: "Mechanical Workers",
+      pipefitter: "Pipe Fitter",
+      tailoriron: "Tailor and Ironer",
+      helper: "Helper Jobs in Saudi Arabia",
     };
 
     return (
@@ -615,25 +811,45 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
           <table className="table">
             <thead>
               <tr>
-                <th onClick={() => toggleSort("fullName")} role="button">Name</th>
-                <th onClick={() => toggleSort("age")} role="button" className="hide-md">Age</th>
+                <th onClick={() => toggleSort("fullName")} role="button">
+                  Name
+                </th>
+                <th
+                  onClick={() => toggleSort("age")}
+                  role="button"
+                  className="hide-md"
+                >
+                  Age
+                </th>
                 <th>Contact</th>
                 <th>Position</th>
-                <th onClick={() => toggleSort("createdAt")} role="button">Date</th>
-                <th onClick={() => toggleSort("city")} role="button" className="hide-md">City</th>
-                <th onClick={() => toggleSort("status")} role="button">Status</th>
+                <th onClick={() => toggleSort("createdAt")} role="button">
+                  Date
+                </th>
+                <th
+                  onClick={() => toggleSort("city")}
+                  role="button"
+                  className="hide-md"
+                >
+                  City
+                </th>
+                <th onClick={() => toggleSort("status")} role="button">
+                  Status
+                </th>
                 <th className="hide-sm">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {data.map(app => (
+              {data.map((app) => (
                 <tr
                   key={`${type}-${app._id}`}
                   className="clickable-row"
                   onClick={() => openModal(type, app)}
                 >
                   <td data-label="Name">{app.fullName}</td>
-                  <td data-label="Age" className="hide-md">{app.age ?? "—"}</td>
+                  <td data-label="Age" className="hide-md">
+                    {app.age ?? "—"}
+                  </td>
                   <td data-label="Contact">{app.contactNumber || "N/A"}</td>
                   <td data-label="Position">
                     {Array.isArray(app.positions)
@@ -641,18 +857,26 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
                       : app.position || "N/A"}
                   </td>
                   <td data-label="Date">
-                    {app.createdAt ? new Date(app.createdAt).toLocaleDateString() : "N/A"}
+                    {app.createdAt
+                      ? new Date(app.createdAt).toLocaleDateString()
+                      : "N/A"}
                   </td>
-                  <td data-label="City" className="hide-md">{app.city}</td>
-                  <td data-label="Status"><StatusPill status={app.status} /></td>
+                  <td data-label="City" className="hide-md">
+                    {app.city}
+                  </td>
+                  <td data-label="Status">
+                    <StatusPill status={app.status} />
+                  </td>
                   <td
                     className="hide-sm"
-                    onClick={e => e.stopPropagation()}
+                    onClick={(e) => e.stopPropagation()}
                     data-label="Actions"
                   >
                     <select
                       value={app.status}
-                      onChange={e => updateApplicationStatus(type, app._id, e.target.value)}
+                      onChange={(e) =>
+                        updateApplicationStatus(type, app._id, e.target.value)
+                      }
                       className="status-select"
                     >
                       <option value="pending">Pending</option>
@@ -679,7 +903,9 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
   };
 
   return (
-    <div className={`admin-dashboard light ${sidebarOpen ? "sidebar-open" : ""}`}>
+    <div
+      className={`admin-dashboard light ${sidebarOpen ? "sidebar-open" : ""}`}
+    >
       {/* Sidebar */}
       <aside className="sidebar card">
         <div className="sidebar-header">
@@ -708,7 +934,9 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
           <div className="menu-section">Application Forms</div>
 
           <div
-            className={`menu-item ${activeTab === "hospitality" ? "active" : ""}`}
+            className={`menu-item ${
+              activeTab === "hospitality" ? "active" : ""
+            }`}
             onClick={() => {
               setActiveTab("hospitality");
               setSidebarOpen(false);
@@ -751,6 +979,57 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
             <span>Domestic</span>
           </div>
 
+          {/* New job categories */}
+          <div
+            className={`menu-item ${
+              activeTab === "mechanical" ? "active" : ""
+            }`}
+            onClick={() => {
+              setActiveTab("mechanical");
+              setSidebarOpen(false);
+            }}
+          >
+            <FaIndustry />
+            <span>Mechanical Workers</span>
+          </div>
+
+          <div
+            className={`menu-item ${
+              activeTab === "pipefitter" ? "active" : ""
+            }`}
+            onClick={() => {
+              setActiveTab("pipefitter");
+              setSidebarOpen(false);
+            }}
+          >
+            <FaIndustry />
+            <span>Pipe Fitter</span>
+          </div>
+
+          <div
+            className={`menu-item ${
+              activeTab === "tailoriron" ? "active" : ""
+            }`}
+            onClick={() => {
+              setActiveTab("tailoriron");
+              setSidebarOpen(false);
+            }}
+          >
+            <FaIndustry />
+            <span>Tailor and Ironer</span>
+          </div>
+
+          <div
+            className={`menu-item ${activeTab === "helper" ? "active" : ""}`}
+            onClick={() => {
+              setActiveTab("helper");
+              setSidebarOpen(false);
+            }}
+          >
+            <FaIndustry />
+            <span>Helper Jobs in Saudi Arabia</span>
+          </div>
+
           <div className="menu-item logout" onClick={onLogout}>
             <FaRightFromBracket />
             <span>Logout</span>
@@ -764,7 +1043,7 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
           <button
             className="icon-btn only-mobile"
             aria-label="Toggle sidebar"
-            onClick={() => setSidebarOpen(v => !v)}
+            onClick={() => setSidebarOpen((v) => !v)}
           >
             {sidebarOpen ? <FaXmark /> : <FaBars />}
           </button>
@@ -774,7 +1053,7 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
             <input
               type="text"
               value={query}
-              onChange={e => setQuery(e.target.value)}
+              onChange={(e) => setQuery(e.target.value)}
               placeholder="Search by name, email, position, city…"
             />
           </div>
@@ -793,10 +1072,16 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
 
         <div className="content-area">
           {activeTab === "dashboard" && renderDashboard()}
-          {activeTab === "hospitality" && renderApplicationsTable("hospitality")}
+          {activeTab === "hospitality" &&
+            renderApplicationsTable("hospitality")}
           {activeTab === "germany" && renderApplicationsTable("germany")}
           {activeTab === "civil" && renderApplicationsTable("civil")}
           {activeTab === "domestic" && renderApplicationsTable("domestic")}
+          {/* New job categories */}
+          {activeTab === "mechanical" && renderApplicationsTable("mechanical")}
+          {activeTab === "pipefitter" && renderApplicationsTable("pipefitter")}
+          {activeTab === "tailoriron" && renderApplicationsTable("tailoriron")}
+          {activeTab === "helper" && renderApplicationsTable("helper")}
         </div>
       </main>
 
@@ -812,26 +1097,45 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
                   ? selectedApp.positions.join(", ")
                   : selectedApp.position || "Application"}
               </h3>
-              <button className="icon-btn" onClick={closeModal} aria-label="Close">
+              <button
+                className="icon-btn"
+                onClick={closeModal}
+                aria-label="Close"
+              >
                 <FaXmark />
               </button>
             </div>
-
             <div className="modal-body">
               <div className="modal-grid">
-                <DetailRow label="Form Type" value={selectedType[0].toUpperCase() + selectedType.slice(1)} />
-                <DetailRow label="Status" value={<StatusPill status={selectedApp.status} />} />
-                <DetailRow 
-                  label="Submission Date" 
-                  value={selectedApp.createdAt ? new Date(selectedApp.createdAt).toLocaleDateString() : "N/A"} 
+                <DetailRow
+                  label="Form Type"
+                  value={selectedType[0].toUpperCase() + selectedType.slice(1)}
+                />
+                <DetailRow
+                  label="Status"
+                  value={<StatusPill status={selectedApp.status} />}
+                />
+                <DetailRow
+                  label="Submission Date"
+                  value={
+                    selectedApp.createdAt
+                      ? new Date(selectedApp.createdAt).toLocaleDateString()
+                      : "N/A"
+                  }
                 />
                 <DetailRow label="City" value={selectedApp.city} />
                 <DetailRow label="Email" value={selectedApp.email} />
                 <DetailRow label="Contact" value={selectedApp.contactNumber} />
                 <DetailRow label="Age" value={selectedApp.age} />
                 <DetailRow label="Gender" value={selectedApp.gender} />
-                <DetailRow label="Residence" value={selectedApp.currentResidence} />
-                <DetailRow label="Passport" value={selectedApp.passportNumber} />
+                <DetailRow
+                  label="Residence"
+                  value={selectedApp.currentResidence}
+                />
+                <DetailRow
+                  label="Passport"
+                  value={selectedApp.passportNumber}
+                />
                 <DetailRow
                   label="Positions"
                   value={
@@ -840,12 +1144,38 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
                       : selectedApp.position || "—"
                   }
                 />
-                <DetailRow label="Worked in Saudi" value={selectedApp.workedInSaudi} />
-                <DetailRow label="Willing to Relocate" value={selectedApp.willingToRelocate} />
-                <DetailRow label="Preferred City" value={selectedApp.preferredCity} />
+                <DetailRow
+                  label="Worked in Saudi"
+                  value={selectedApp.workedInSaudi}
+                />
+                <DetailRow
+                  label="Willing to Relocate"
+                  value={selectedApp.willingToRelocate}
+                />
+                <DetailRow
+                  label="Preferred City"
+                  value={selectedApp.preferredCity}
+                />
               </div>
             </div>
 
+            <div className="modal-comments">
+              <label htmlFor="comment" className="comment-label">
+                Add Comment:
+                {isSavingComment && (
+                  <span className="saving-indicator">Saving...</span>
+                )}
+              </label>
+              <textarea
+                id="comment"
+                className="comment-box"
+                rows="3"
+                placeholder="Write your comments here..."
+                value={selectedApp.comment || ""}
+                onChange={handleCommentChange}
+                disabled={isSavingComment}
+              />
+            </div>
             <div className="modal-footer">
               <div className="inline">
                 <label htmlFor="statusSel">Update Status:</label>
@@ -853,8 +1183,12 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
                   id="statusSel"
                   className="status-select"
                   value={selectedApp.status}
-                  onChange={e =>
-                    updateApplicationStatus(selectedType, selectedApp._id, e.target.value)
+                  onChange={(e) =>
+                    updateApplicationStatus(
+                      selectedType,
+                      selectedApp._id,
+                      e.target.value
+                    )
                   }
                 >
                   <option value="pending">Pending</option>
@@ -866,11 +1200,13 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
               </div>
 
               <div className="footer-actions">
-                <button className="btn ghost" onClick={closeModal}>Close</button>
-                
+                <button className="btn ghost" onClick={closeModal}>
+                  Close
+                </button>
+
                 {selectedApp.status === "accepted" && (
-                  <button 
-                    className="btn primary" 
+                  <button
+                    className="btn primary"
                     onClick={() => {
                       closeModal();
                       startApplicationProcess(selectedType, selectedApp);
@@ -879,7 +1215,7 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
                     Start Application Process
                   </button>
                 )}
-                
+
                 <button
                   className="btn"
                   onClick={() => {
@@ -895,25 +1231,36 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
                       "Date",
                       "City",
                       "Status",
+                      "Comment",
                     ];
-                    const one = [{
-                      "Form Type": type,
-                      "Name": row.fullName || "",
-                      "Age": row.age ?? "",
-                      "Contact": row.contactNumber || "",
-                      "Email": row.email || "",
-                      "Position(s)": Array.isArray(row.positions)
-                        ? row.positions.join(", ")
-                        : row.position || "",
-                      "Date": row.createdAt ? new Date(row.createdAt).toLocaleDateString() : "",
-                      "City": row.city || "",
-                      "Status": row.status || "",
-                    }];
+                    const one = [
+                      {
+                        "Form Type": type,
+                        Name: row.fullName || "",
+                        Age: row.age ?? "",
+                        Contact: row.contactNumber || "",
+                        Email: row.email || "",
+                        "Position(s)": Array.isArray(row.positions)
+                          ? row.positions.join(", ")
+                          : row.position || "",
+                        Date: row.createdAt
+                          ? new Date(row.createdAt).toLocaleDateString()
+                          : "",
+                        City: row.city || "",
+                        Status: row.status || "",
+                        Comment: row.comment || "",
+                      },
+                    ];
                     const ws = utils.json_to_sheet(one, { header: headers });
-                    ws["!cols"] = headers.map(h => ({ wch: Math.max(12, h.length + 2) }));
+                    ws["!cols"] = headers.map((h) => ({
+                      wch: Math.max(12, h.length + 2),
+                    }));
                     const wb = utils.book_new();
                     utils.book_append_sheet(wb, ws, "Application");
-                    writeFile(wb, `${type}-${row.fullName.replace(/\s+/g, "_")}.xlsx`);
+                    writeFile(
+                      wb,
+                      `${type}-${row.fullName.replace(/\s+/g, "_")}.xlsx`
+                    );
                   }}
                 >
                   <FaDownload /> Export This

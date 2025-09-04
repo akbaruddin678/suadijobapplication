@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import "./MechanicalForm.css";
+import "./TailorIroner.css";
 import saudiHeroImage from "../../../assets/react.svg";
 
 const ApplicationForm = () => {
   const [formData, setFormData] = useState({
-    jobtitle: "mechanical",
+    jobtitle: "tailoriron",
     fullName: "",
     age: "",
     gender: "",
@@ -12,7 +12,7 @@ const ApplicationForm = () => {
     contactNumber: "",
     email: "",
     passportNumber: "",
-    positions: [],
+    position: "", // Changed from positions array to single position
     otherPosition: "",
     willingToRelocate: "",
     otherRelocate: "",
@@ -20,6 +20,7 @@ const ApplicationForm = () => {
     otherCity: "",
     workedInSaudi: "",
     whyWorkInSaudi: "",
+    reference: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -27,7 +28,8 @@ const ApplicationForm = () => {
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState(null);
 
-  const positionOptions = ["Multi Weilders", "Fabricators", "Fitters", "Other"];
+  // Updated to trade positions with single selection
+  const positionOptions = ["Tailor", "Ironer", "Other"];
 
   const showToast = (title, description, type = "success") => {
     setToast({ title, description, type });
@@ -45,22 +47,11 @@ const ApplicationForm = () => {
     }
   };
 
-  const handlePositionChange = (position, checked) => {
-    const updatedPositions = checked
-      ? [...formData.positions, position]
-      : formData.positions.filter((p) => p !== position);
-
-    setFormData({
-      ...formData,
-      positions: updatedPositions,
-    });
-  };
-
   const validateForm = () => {
     const newErrors = {};
 
     if (!formData.fullName.trim()) newErrors.fullName = "Full name is required";
-    if (!formData.age || Number(formData.age) < 18 || Number(formData.age) > 40)
+    if (!formData.age || Number(formData.age) < 18 || Number(formData.age) > 65)
       newErrors.age = "Age must be between 18 and 65";
     if (!formData.gender) newErrors.gender = "Gender is required";
     if (!formData.currentResidence.trim())
@@ -71,9 +62,10 @@ const ApplicationForm = () => {
       newErrors.email = "Valid email is required";
     if (!formData.passportNumber.trim())
       newErrors.passportNumber = "Passport number is required";
-    if (formData.positions.length === 0)
-      newErrors.positions = "At least one position is required";
-    if (formData.positions.includes("Other") && !formData.otherPosition.trim())
+    if (!formData.position)
+      // Changed from positions array
+      newErrors.position = "Please select a position";
+    if (formData.position === "Other" && !formData.otherPosition.trim())
       newErrors.otherPosition = "Please specify position";
     if (!formData.willingToRelocate)
       newErrors.willingToRelocate = "This field is required";
@@ -178,10 +170,10 @@ const ApplicationForm = () => {
         <div className="hero-overlay">
           <div className="hero-content">
             <h1 className="hero-title">
-              Saudi Arabia Job Application For Mechanical
+              Saudi Arabia Job Application For Skilled Trades
             </h1>
             <p className="hero-subtitle">
-              Domestic Worker Opportunities 2025-26
+              Construction & Technical Opportunities 2025-26
             </p>
           </div>
         </div>
@@ -191,7 +183,7 @@ const ApplicationForm = () => {
       <div className="form-wrapper">
         <div className="form-card slide-up">
           <div className="form-header">
-            <h1 className="form-title">Application Form</h1>
+            <h1 className="form-title">Skilled Trades Application</h1>
             <p className="form-description">
               Complete all sections to submit your application
             </p>
@@ -220,7 +212,7 @@ const ApplicationForm = () => {
                 </div>
 
                 <div className="form-grid">
-                  <input type="hidden" name="jobtitle" value="mechanical" />
+                  <input type="hidden" name="jobtitle" value="Pipe-Fitter" />
 
                   <div className="form-group">
                     <label className="form-label" htmlFor="fullName">
@@ -422,29 +414,31 @@ const ApplicationForm = () => {
 
                 <div className="form-group full-width">
                   <label className="form-label">
-                    Position Applying For (Multiple choice){" "}
+                    Position Applying For (Select one){" "}
                     <span className="required-asterisk">*</span>
                   </label>
-                  <div className="checkbox-grid">
+                  <div className="radio-group">
                     {positionOptions.map((position) => (
-                      <label key={position} className="checkbox-option">
+                      <label key={position} className="radio-option">
                         <input
-                          type="checkbox"
-                          className="checkbox-input"
-                          checked={formData.positions.includes(position)}
+                          type="radio"
+                          className="radio-input"
+                          name="position"
+                          value={position}
+                          checked={formData.position === position}
                           onChange={(e) =>
-                            handlePositionChange(position, e.target.checked)
+                            handleChange("position", e.target.value)
                           }
                         />
                         {position}
                       </label>
                     ))}
                   </div>
-                  {errors.positions && (
-                    <div className="error-message">{errors.positions}</div>
+                  {errors.position && (
+                    <div className="error-message">{errors.position}</div>
                   )}
 
-                  {formData.positions.includes("Other") && (
+                  {formData.position === "Other" && (
                     <div className="other-input">
                       <label className="form-label" htmlFor="otherPosition">
                         Please specify position

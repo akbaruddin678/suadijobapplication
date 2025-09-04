@@ -45,25 +45,25 @@ const LandingPage = () => {
 
   // Positions data
   const hospitalityPositions = [
-    { icon: "👩‍💼", title: "Hostess", description: "Welcome guests, manage reservations, and ensure excellent first impressions.", salary: "2,500 - 3,500 SAR" },
-    { icon: "☕", title: "Barista", description: "Prepare and serve premium coffee beverages with exceptional customer.", salary: "2,800 - 3,800 SAR" },
-    { icon: "🍽️", title: "Waiter/Waitress", description: "Provide outstanding dining experiences with attention to detail.", salary: "2,500 - 3,200 SAR" },
-    { icon: "🛏️", title: "Room Attendant", description: "Maintain high standards of cleanliness and comfort in guest rooms.", salary: "2,200 - 3,000 SAR" },
-    { icon: "👔", title: "Laundry Attendant", description: "Handle professional laundry services with care and efficiency.", salary: "2,200 - 2,800 SAR" },
-    { icon: "🍳", title: "Commi III", description: "Support kitchen operations and learn from experienced chefs.", salary: "2,500 - 3,500 SAR" },
-    { icon: "🧹", title: "Steward", description: "Maintain kitchen cleanliness and support culinary team.", salary: "2,200 - 2,800 SAR" },
-    { icon: "🛎️", title: "Bellman", description: "Assist guests with luggage and provide warm welcomes.", salary: "2,500 - 3,200 SAR" }
+    { icon: "👩‍💼", title: "Hostess", description: "Welcome guests, manage reservations, and ensure excellent first impressions." },
+    { icon: "☕", title: "Barista", description: "Prepare and serve premium coffee beverages with exceptional customer." },
+    { icon: "🍽️", title: "Waiter/Waitress", description: "Provide outstanding dining experiences with attention to detail." },
+    { icon: "🛏️", title: "Room Attendant", description: "Maintain high standards of cleanliness and comfort in guest rooms." },
+    { icon: "👔", title: "Laundry Attendant", description: "Handle professional laundry services with care and efficiency." },
+    { icon: "🍳", title: "Commi III", description: "Support kitchen operations and learn from experienced chefs." },
+    { icon: "🧹", title: "Steward", description: "Maintain kitchen cleanliness and support culinary team." },
+    { icon: "🛎️", title: "Bellman", description: "Assist guests with luggage and provide warm welcomes." }
   ];
 
   const domesticPositions = [
-    { icon: "👶", title: "Nanny/Babysitter", description: "Provide childcare services in private households.", salary: "2,500 - 3,500 SAR" },
-    { icon: "🚗", title: "Private Driver", description: "Provide safe transportation for families.", salary: "2,800 - 3,800 SAR" },
-    { icon: "👨‍🍳", title: "Cook/Chef", description: "Prepare meals in private household settings.", salary: "3,000 - 4,500 SAR" },
-    { icon: "👵", title: "Caregiver", description: "Provide care for elderly or special needs individuals.", salary: "2,800 - 3,800 SAR" },
-    { icon: "🏠", title: "Domestic Worker", description: "Perform various household tasks and maintenance.", salary: "2,200 - 2,800 SAR" },
-    { icon: "🧹", title: "Household Help", description: "Assist with cleaning and general household duties.", salary: "2,200 - 2,800 SAR" },
-    { icon: "⏰", title: "Cleaner (Hourly)", description: "Provide cleaning services on an hourly basis.", salary: "25 - 40 SAR/hour" },
-    { icon: "❤️", title: "Elderly Care Specialist", description: "Specialized care for senior family members.", salary: "3,000 - 4,200 SAR" }
+    { icon: "👶", title: "Nanny/Babysitter", description: "Provide childcare services in private households." },
+    { icon: "🚗", title: "Private Driver", description: "Provide safe transportation for families." },
+    { icon: "👨‍🍳", title: "Cook/Chef", description: "Prepare meals in private household settings." },
+    { icon: "👵", title: "Caregiver", description: "Provide care for elderly or special needs individuals." },
+    { icon: "🏠", title: "Domestic Worker", description: "Perform various household tasks and maintenance." },
+    { icon: "🧹", title: "Household Help", description: "Assist with cleaning and general household duties." },
+    { icon: "⏰", title: "Cleaner (Hourly)", description: "Provide cleaning services on an hourly basis." },
+    { icon: "❤️", title: "Elderly Care Specialist", description: "Specialized care for senior family members." }
   ];
 
   // Items per slide
@@ -321,7 +321,7 @@ const LandingPage = () => {
                         <div className="position-icon">{position.icon}</div>
                         <h4>{position.title}</h4>
                         <p>{position.description}</p>
-                        <div className="position-salary">{position.salary}</div>
+                        {/* <div className="position-salary">{position.salary}</div> */}
                         <button className="btn-apply-now" onClick={() => handleApply("hospitality")}>
                           Apply Now
                           <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -377,8 +377,8 @@ const LandingPage = () => {
                       <div className="position-card">
                         <div className="position-icon">{position.icon}</div>
                         <h4>{position.title}</h4>
-                        <p>{position.description}</p>
-                        <div className="position-salary">{position.salary}</div>
+                        {/* <p>{position.description}</p> */}
+                        {/* <div className="position-salary">{position.salary}</div> */}
                         <button className="btn-apply-now" onClick={() => handleApply("domestic")}>
                           Apply Now
                           <svg width="16" height="16" viewBox="0 0 24 24" fill="none">

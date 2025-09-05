@@ -27,7 +27,7 @@ const ApplicationForm = () => {
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState(null);
 
-  const positionOptions = ["Domestic Worker and Nannies Abroad"];
+  const positionOptions = ["Internship in germany"];
 
   const showToast = (title, description, type = "success") => {
     setToast({ title, description, type });
@@ -178,7 +178,9 @@ const ApplicationForm = () => {
         <div className="hero-overlay">
           <div className="hero-content">
             <h1 className="hero-title">Germany Application For Internship</h1>
-            <p className="hero-subtitle">
+            <p  style={{
+              color:"white"
+            }} className="hero-subtitle">
               Domestic Worker Opportunities 2025-26
             </p>
           </div>
@@ -338,7 +340,7 @@ const ApplicationForm = () => {
                       <span className="required-asterisk">*</span>
                     </label>
                     <input
-                      type="text"
+                      type="number"
                       id="contactNumber"
                       className={`form-input ${
                         errors.contactNumber ? "error" : ""
@@ -347,7 +349,7 @@ const ApplicationForm = () => {
                       onChange={(e) =>
                         handleChange("contactNumber", e.target.value)
                       }
-                      placeholder="+92XXXXXXXXXX"
+                      placeholder="03XXXXXXXXX"
                     />
                     {errors.contactNumber && (
                       <div className="error-message">

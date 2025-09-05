@@ -172,7 +172,9 @@ const ApplicationForm = () => {
             <h1 className="hero-title">
               Saudi Arabia Job Application For Skilled Trades
             </h1>
-            <p className="hero-subtitle">
+            <p  style={{
+              color:"white"
+            }} className="hero-subtitle">
               Construction & Technical Opportunities 2025-26
             </p>
           </div>
@@ -331,7 +333,7 @@ const ApplicationForm = () => {
                       <span className="required-asterisk">*</span>
                     </label>
                     <input
-                      type="text"
+                      type="number"
                       id="contactNumber"
                       className={`form-input ${
                         errors.contactNumber ? "error" : ""
@@ -340,7 +342,7 @@ const ApplicationForm = () => {
                       onChange={(e) =>
                         handleChange("contactNumber", e.target.value)
                       }
-                      placeholder="+92XXXXXXXXXX"
+                      placeholder="03XXXXXXXXX"
                     />
                     {errors.contactNumber && (
                       <div className="error-message">

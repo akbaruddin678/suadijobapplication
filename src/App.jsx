@@ -122,11 +122,11 @@ function App() {
               element={<ApplicationFormPipeFitter />}
             />
             <Route
-              path="application-pipefitter"
+              path="application-tailor/ironer"
               element={<ApplicationFormTailorIroner />}
             />
             <Route
-              path="application-pipefitter"
+              path="application-helperjobs"
               element={<ApplicationFormHelpers />}
             />
           </Route>

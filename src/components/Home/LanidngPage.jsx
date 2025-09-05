@@ -511,12 +511,12 @@ const LandingPage = () => {
             <div className="footer-section">
               <h3>College of International Skill Developments</h3>
               <p>Connecting talent with international opportunities across multiple industries and countries</p>
-              <div className="social-links">
+              {/* <div className="social-links">
                 <a href="#"><span>📱</span></a>
                 <a href="#"><span>💻</span></a>
                 <a href="#"><span>📸</span></a>
                 <a href="#"><span>🐦</span></a>
-              </div>
+              </div> */}
             </div>
 
             <div className="footer-section">
@@ -531,10 +531,10 @@ const LandingPage = () => {
 
             <div className="footer-section">
               <h4>Contact Information</h4>
-              <p>Phone: 0317-1173879</p>
+              <p>Phone: 0322 0547996</p>
               <p>Address: 9A - Shershah Block, Garden Town, Lahore</p>
               <p>Website: www.cisd.edu.pk</p>
-              <p>Email: info@cisd.edu.pk</p>
+              {/* <p>Email: info@cisd.edu.pk</p> */}
             </div>
           </div>
 

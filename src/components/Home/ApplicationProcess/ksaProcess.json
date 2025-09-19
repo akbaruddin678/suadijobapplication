@@ -1,0 +1,145 @@
+[
+  {
+    "id": "demand",
+    "title": "Demand Letter & Power of Attorney",
+    "icon": "FaFileInvoice",
+    "description": "Verify and attest the Demand Letter & Power of Attorney.",
+    "details": {
+      "info": [
+        "Demand Letter and POA attested by Saudi Chamber & MOFA.",
+        "Pakistan Embassy attestation in KSA is also required.",
+        "Docs define workers, categories, salaries, facilities."
+      ],
+      "documents": [
+        "Demand Letter (Attested: Saudi Chamber & MOFA)",
+        "Power of Attorney (Attested)",
+        "Pakistan Embassy Attestation Proof"
+      ],
+      "portals": [
+        { "label": "BEOE (Official)", "url": "https://beoe.gov.pk/" }
+      ]
+    }
+  },
+  {
+    "id": "permission",
+    "title": "Permission from OEP (BEOE)",
+    "icon": "FaFileMedical",
+    "description": "Submit demand docs to Protector and obtain prior permission.",
+    "details": {
+      "info": [
+        "Submit attested Demand Letter & POA to the Protector Office.",
+        "Apply for Permission Number before advertising/processing."
+      ],
+      "documents": [
+        "Attested Demand Letter",
+        "Attested Power of Attorney"
+      ],
+      "portals": [
+        { "label": "BEOE Portal", "url": "https://beoe.gov.pk/" }
+      ]
+    }
+  },
+  {
+    "id": "candidate",
+    "title": "Candidate Registration & Docs",
+    "icon": "FaFileMedical",
+    "description": "Collect and validate candidate documents.",
+    "details": {
+      "required": [
+        "CNIC",
+        "Passport (6+ months valid)",
+        "Photos (blue/white background)",
+        "Educational/Experience Certificates"
+      ],
+      "optional": ["Offer/Appointment Letter (post-selection)"]
+    }
+  },
+  {
+    "id": "medical",
+    "title": "Medical Test (GAMCA/GCC)",
+    "icon": "FaFileMedical",
+    "description": "GCC medical clearance is mandatory for visa.",
+    "details": {
+      "instructions": [
+        "Book GAMCA/GCC appointment.",
+        "Bring original passport & photos.",
+        "Follow fasting/prep if advised."
+      ],
+      "portals": [{ "label": "GCC/GAMCA", "url": "https://v2.gcchmc.org/" }]
+    }
+  },
+  {
+    "id": "training",
+    "title": "NAVTTC Training / Skill Verification",
+    "icon": "FaGraduationCap",
+    "description": "Complete training/skill verification where applicable.",
+    "details": {
+      "notes": [
+        "Drivers/technicians/domestic staff may require tests/training.",
+        "NAVTTC issues skill verification certificates."
+      ],
+      "portals": [{ "label": "NAVTTC", "url": "https://navttc.gov.pk/" }],
+      "options": [
+        { "name": "Basic Orientation", "duration": "3 Days", "mandatory": true },
+        { "name": "Job-Specific Training", "duration": "5–10 Days", "mandatory": false },
+        { "name": "Basic Arabic Language", "duration": "2 Weeks", "mandatory": false }
+      ]
+    }
+  },
+  {
+    "id": "visa",
+    "title": "Visa Processing & Biometrics",
+    "icon": "FaPassport",
+    "description": "Apply E-Number and complete biometrics.",
+    "details": {
+      "info": [
+        "Employer shares visa block/number.",
+        "Apply E-Number (Enjaz/MOFA) and do biometrics at Gerry’s/Etimad."
+      ],
+      "portals": [
+        { "label": "Enjaz", "url": "https://enjazit.com.sa/" },
+        { "label": "MOFA eServices", "url": "https://www.eservices.mofa.gov.sa/" },
+        { "label": "VFS/Gerry’s (Etimad)", "url": "https://visa.vfsglobal.com/pak/en/sau/" }
+      ],
+      "timeline": [
+        { "title": "Application Submitted", "note": "Embassy/Center", "status": "completed" },
+        { "title": "Under Processing", "note": "Review by authorities", "status": "current" },
+        { "title": "Approval", "note": "Approval notification", "status": "upcoming" },
+        { "title": "Visa Stamping", "note": "Passport returned with visa", "status": "upcoming" }
+      ]
+    }
+  },
+  {
+    "id": "protector",
+    "title": "Protector of Emigrants (Final Clearance)",
+    "icon": "FaFileMedical",
+    "description": "Obtain Protector clearance after visa stamping.",
+    "details": {
+      "documents": [
+        "Passport + Visa",
+        "CNIC",
+        "Medical Slip",
+        "Employment Contract",
+        "Welfare Fund & Insurance Fee Deposit Slips"
+      ],
+      "portals": [
+        {
+          "label": "Protectorate of Emigrants",
+          "url": "https://beoe.gov.pk/protectorate-of-emigrants"
+        }
+      ]
+    }
+  },
+  {
+    "id": "travel",
+    "title": "Travel Arrangements",
+    "icon": "FaCreditCard",
+    "description": "Book ticket & depart for KSA.",
+    "details": {
+      "notes": [
+        "Carry original passport, CNIC copy, and signed contract.",
+        "Ticket may be arranged by employer or candidate."
+      ]
+    }
+  }
+]

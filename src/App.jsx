@@ -6,20 +6,27 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+
 import ApplicationFormHospitality from "./components/Forms/HospitalityForm/HospitalityForm.jsx";
 import ApplicationFormDomestic from "./components/Forms/DomesticForm/DomesticForm.jsx";
 import ApplicationFormCivil from "./components/Forms/CivilForm/CivilForm.jsx";
 import ApplicationFormGermany from "./components/Forms/GermanyForm/GermanyForm.jsx";
-import ApplicationFormMechanical from './components/Forms/MechanicalForm/MechanicalForm.jsx'
-import ApplicationFormPipeFitter from './components/Forms/PipeFitter/PipeFitter.jsx'
+import ApplicationFormMechanical from "./components/Forms/MechanicalForm/MechanicalForm.jsx";
+import ApplicationFormPipeFitter from "./components/Forms/PipeFitter/PipeFitter.jsx";
 import ApplicationFormTailorIroner from "./components/Forms/TailorIroner/TailorIroner.jsx";
 import ApplicationFormHelpers from "./components/Forms/hHelperJobs/helperjobs.jsx";
+
+import ItalyHomePage from "./components/Forms/ItalyForm/HomePage.jsx";
+import HealthcareForm from "./components/Forms/ItalyForm/HealthcareForm.jsx";
+
 import LandingPage from "./components/Home/LanidngPage.jsx";
 import JobSelection from "./components/JobSelection/JobSelection.jsx";
 import AdminDashboard from "./components/Home/Dashboard/AdminDashboard.jsx";
-
 import Login from "./components/Auth/Login.jsx";
+
 import "./App.css";
+
+/* ---------------- Route Guards ---------------- */
 
 const ProtectedRoute = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -32,13 +39,9 @@ const ProtectedRoute = ({ children }) => {
 
       if (token && savedUser) {
         try {
-          // Verify token with backend (optional)
           const response = await fetch("/api/auth/verify", {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+            headers: { Authorization: `Bearer ${token}` },
           });
-
           if (response.ok) {
             setUser(JSON.parse(savedUser));
           } else {
@@ -57,36 +60,26 @@ const ProtectedRoute = ({ children }) => {
     verifyAuth();
   }, []);
 
-  if (loading) {
-    return <div className="loading-container">Loading...</div>;
-  }
-
-  return user ? children : <Navigate to="/login" />;
+  if (loading) return <div className="loading-container">Loading...</div>;
+  return user ? children : <Navigate to="/login" replace />;
 };
 
-// Public Route Component (redirect to dashboard if already logged in)
-// Public Route Component (redirect to dashboard if already logged in)
 const PublicRoute = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user is logged in - now checking both 'user' and 'token'
     const savedUser = localStorage.getItem("user");
     const token = localStorage.getItem("token");
-
-    if (savedUser && token) {
-      setUser(JSON.parse(savedUser));
-    }
+    if (savedUser && token) setUser(JSON.parse(savedUser));
     setLoading(false);
   }, []);
 
-  if (loading) {
-    return <div className="loading-container">Loading...</div>;
-  }
-
-  return user ? <Navigate to="/admin" /> : children;
+  if (loading) return <div className="loading-container">Loading...</div>;
+  return user ? <Navigate to="/admin" replace /> : children;
 };
+
+/* ---------------- App ---------------- */
 
 function App() {
   return (
@@ -95,43 +88,25 @@ function App() {
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<LandingPage />} />
+
+          {/* JobSelection hub + nested routes */}
           <Route path="/jobselection" element={<JobSelection />}>
-            {/* Nested routes */}
-            <Route
-              path="application-hospitality"
-              element={<ApplicationFormHospitality />}
-            />
-            <Route
-              path="application-domestic"
-              element={<ApplicationFormDomestic />}
-            />
-            <Route
-              path="application-civil"
-              element={<ApplicationFormCivil />}
-            />
-            <Route
-              path="application-germany"
-              element={<ApplicationFormGermany />}
-            />
-            <Route
-              path="application-mechanical"
-              element={<ApplicationFormMechanical />}
-            />
-            <Route
-              path="application-pipefitter"
-              element={<ApplicationFormPipeFitter />}
-            />
-            <Route
-              path="application-tailor/ironer"
-              element={<ApplicationFormTailorIroner />}
-            />
-            <Route
-              path="application-helperjobs"
-              element={<ApplicationFormHelpers />}
-            />
+            {/* General application forms */}
+            <Route path="application-hospitality" element={<ApplicationFormHospitality />} />
+            <Route path="application-domestic" element={<ApplicationFormDomestic />} />
+            <Route path="application-civil" element={<ApplicationFormCivil />} />
+            <Route path="application-germany" element={<ApplicationFormGermany />} />
+            <Route path="application-mechanical" element={<ApplicationFormMechanical />} />
+            <Route path="application-pipefitter" element={<ApplicationFormPipeFitter />} />
+            <Route path="application-tailor-ironer" element={<ApplicationFormTailorIroner />} />
+            <Route path="application-helperjobs" element={<ApplicationFormHelpers />} />
+
+            {/* Italy landing + namespaced Italy program forms */}
+            <Route path="application-italyjobs" element={<ItalyHomePage />} />
+            <Route path="application-italy-form" element={<HealthcareForm />} />
           </Route>
 
-          {/* Auth Routes */}
+          {/* Auth */}
           <Route
             path="/login"
             element={
@@ -151,8 +126,8 @@ function App() {
             }
           />
 
-          {/* Catch all route - redirect to home */}
-          <Route path="*" element={<Navigate to="/" />} />
+          {/* Catch-all */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>
     </Router>

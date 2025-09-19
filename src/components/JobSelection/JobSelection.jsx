@@ -25,6 +25,19 @@ const JobSelection = () => {
     setAnimateCards(true);
   }, []);
 
+  // Featured Italy Jobs (special section)
+  const featuredItalyJobs = {
+    id: "italy-jobs",
+    title: "🇮🇹 Healthcare & Hospitality Courses in Italy",
+    description: "Professional Careers in Italy Begin Here, With Accredited Training + Job Support.",
+    icon: faGlobeEurope,
+    path: "application-italyjobs",
+    color: "#e74a3b",
+    gradient: "linear-gradient(135deg, #ff6b6b 0%, #ee5a24 50%, #ff9ff3 100%)",
+    isFeatured: true
+  }
+
+  // Regular job options
   const jobOptions = [
     {
       id: 'civil',
@@ -101,43 +114,91 @@ const JobSelection = () => {
   ]
 
   return (
-    <div className="job-selection-container">
+    <div style={{
+    }} className="job-selection-container">
       {!isFormPage ? (
         <>
           <div className="job-selection-header">
             <h1>Career Opportunities</h1>
             <p>Select your desired career path to begin your application process</p>
           </div>
-          
-          <div className="job-cards-container">
-            {jobOptions.map((job, index) => (
-              <Link 
-                key={job.id} 
-                to={job.path}
-                className={`job-card-link ${animateCards ? 'animate-in' : ''}`}
-                style={{ animationDelay: `${index * 0.1}s` }}
+
+          {/* Featured Italy Jobs Section */}
+          <div className="featured-section">
+            <div className="featured-header">
+              <h2>🌟 Featured Opportunity</h2>
+              <p>Don’t miss this unique chance to join our Italy courses!</p>
+            </div>
+            <Link 
+              to={featuredItalyJobs.path}
+              className={`featured-job-link ${animateCards ? 'animate-in' : ''}`}
+              style={{ animationDelay: '0.1s' }}
+            >
+              <div 
+                className="featured-job-card"
+                style={{ '--accent-color': featuredItalyJobs.color }}
               >
-                <div 
-                  className="job-card"
-                  style={{ '--accent-color': job.color }}
-                >
-                  <div className="job-card-bg" style={{ background: job.gradient }}></div>
-                  <div className="job-card-content">
-                    <div className="job-card-icon" style={{ background: job.gradient }}>
-                      <FontAwesomeIcon icon={job.icon} />
+                <div className="featured-job-bg" style={{ background: featuredItalyJobs.gradient }}></div>
+                <div className="featured-job-content">
+                  <div className="featured-job-icon" style={{ background: featuredItalyJobs.gradient }}>
+                    <FontAwesomeIcon icon={featuredItalyJobs.icon} />
+                  </div>
+                  <div className="featured-job-text">
+                    <h3>{featuredItalyJobs.title}</h3>
+                    <p>{featuredItalyJobs.description}</p>
+                    <div className="featured-job-features">
+                      <span className="feature-badge">🏥 Healthcare</span>
+                      <span className="feature-badge">🏨 Hospitality</span>
+                      <span className="feature-badge">🇮🇹 Italy</span>
                     </div>
-                    <h3>{job.title}</h3>
-                    <p>{job.description}</p>
-                    <div className="job-card-footer">
-                      <span className="apply-text">Apply Now</span>
-                      <div className="job-card-arrow">
-                        <FontAwesomeIcon icon={faArrowRight} />
-                      </div>
+                  </div>
+                  <div className="featured-job-footer">
+                    <span className="apply-text">Apply Now</span>
+                    <div className="job-card-arrow">
+                      <FontAwesomeIcon icon={faArrowRight} />
                     </div>
                   </div>
                 </div>
-              </Link>
-            ))}
+              </div>
+            </Link>
+          </div>
+
+          {/* Regular Jobs Section */}
+          <div className="regular-jobs-section">
+            <div className="section-header">
+              <h2>Other Career Opportunities</h2>
+              <p>Explore our diverse range of job opportunities</p>
+            </div>
+            <div className="job-cards-container">
+              {jobOptions.map((job, index) => (
+                <Link 
+                  key={job.id} 
+                  to={job.path}
+                  className={`job-card-link ${animateCards ? 'animate-in' : ''}`}
+                  style={{ animationDelay: `${(index + 2) * 0.1}s` }}
+                >
+                  <div 
+                    className="job-card"
+                    style={{ '--accent-color': job.color }}
+                  >
+                    <div className="job-card-bg" style={{ background: job.gradient }}></div>
+                    <div className="job-card-content">
+                      <div className="job-card-icon" style={{ background: job.gradient }}>
+                        <FontAwesomeIcon icon={job.icon} />
+                      </div>
+                      <h3>{job.title}</h3>
+                      <p>{job.description}</p>
+                      <div className="job-card-footer">
+                        <span className="apply-text">Apply Now</span>
+                        <div className="job-card-arrow">
+                          <FontAwesomeIcon icon={faArrowRight} />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
 
           <div className="job-selection-footer">

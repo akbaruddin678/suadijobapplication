@@ -1,433 +1,318 @@
 // ApplicationProcess.jsx
-import React, { useState } from "react";
-import {
-  FaCircleCheck,
-  FaFileInvoice,
-  FaFileMedical,
-  FaGraduationCap,
-  FaPassport,
-  FaCreditCard,
-  FaArrowLeft,
-  FaArrowRight,
-  FaPrint
-} from "react-icons/fa6";
-import "./ApplicationProcess.css";
+import React, { useState } from 'react';
+import './ApplicationProcess.css';
+import PaymentTracker from './PaymentTracker';
 
-const ApplicationProcess = ({ application, onBack, onComplete }) => {
-  const [currentStep, setCurrentStep] = useState(0);
-  const [completedSteps, setCompletedSteps] = useState([]);
+const ApplicationProcess = ({ application, onBack }) => {
+  const [currentStep, setCurrentStep] = useState(4); // Start at step 4 for demo
+  const [stepsData, setStepsData] = useState({
+    demandLetter: { completed: true, notes: "", documents: [] },
+    oepPermission: { completed: true, notes: "", documents: [] },
+    candidateRegistration: { completed: true, notes: "", documents: [] },
+    medicalTest: { completed: true, notes: "", documents: [] },
+    training: { completed: false, notes: "Candidate has completed basic orientation. Scheduled for job-specific training next week.", documents: [
+      { name: "Orientation_Certificate.pdf", type: "pdf", size: 256000, uploadDate: new Date('2023-11-12') },
+      { name: "Training_Schedule.docx", type: "docx", size: 128000, uploadDate: new Date('2023-11-10') }
+    ] },
+    visaProcessing: { completed: false, notes: "", documents: [] },
+    finalClearance: { completed: false, notes: "", documents: [] },
+    travelArrangements: { completed: false, notes: "", documents: [] }
+  });
 
-  const steps = [
+  const processSteps = [
     {
-      id: "demand",
-      title: "Demand Letter Verification",
-      icon: <FaFileInvoice />,
-      description: "Verify the demand letter from employer"
+      key: "demandLetter",
+      title: "Demand Letter & Power of Attorney",
+      description: "The Saudi employer sends you a Demand Letter and Power of Attorney (duly attested by the Saudi Chamber of Commerce & MOFA). These documents must be attested by the Pakistan Embassy in KSA.",
+      resources: [
+        { name: "Sample Demand Letter", url: "#" },
+        { name: "Power of Attorney Template", url: "#" }
+      ]
     },
     {
-      id: "documents",
-      title: "Document Verification",
-      icon: <FaFileMedical />,
-      description: "Verify all required documents"
+      key: "oepPermission",
+      title: "Permission from OEP",
+      description: "Submit the Demand Letter & Power of Attorney to the Protector of Emigrants Office. Apply for Permission Number (prior approval) before advertising or processing candidates.",
+      resources: [
+        { name: "OEP Portal", url: "https://beoe.gov.pk/" },
+        { name: "Application Form", url: "#" }
+      ]
     },
     {
-      id: "medical",
-      title: "Medical GAMCA",
-      icon: <FaFileMedical />,
-      description: "Complete medical examination"
+      key: "candidateRegistration",
+      title: "Candidate Registration & Document Collection",
+      description: "Collect required documents from the candidate: CNIC, Passport, Photographs, Educational/Experience Certificates, and Offer letter.",
+      resources: [
+        { name: "Document Checklist", url: "#" },
+        { name: "Application Form", url: "#" }
+      ]
     },
     {
-      id: "training",
-      title: "Training (If needed)",
-      icon: <FaGraduationCap />,
-      description: "Complete required training programs"
+      key: "medicalTest",
+      title: "Medical Test Process",
+      description: "Candidates undergo GAMCA/GCC-approved medical tests at designated medical centers. Medical clearance is mandatory for visa endorsement.",
+      resources: [
+        { name: "GCC Medical Portal", url: "https://v2.gcchmc.org/" },
+        { name: "Approved Medical Centers", url: "#" }
+      ]
     },
     {
-      id: "visa",
-      title: "Visa Process",
-      icon: <FaPassport />,
-      description: "Process visa application"
+      key: "training",
+      title: "Training/NAVTTC & Skill Verification",
+      description: "For some categories, skill test and training may be required. NAVTTC centers issue skill verification certificates.",
+      resources: [
+        { name: "NAVTTC Portal", url: "https://navttc.gov.pk/" },
+        { name: "Skill Test Centers", url: "#" }
+      ]
     },
     {
-      id: "payment",
-      title: "Fee Payment",
-      icon: <FaCreditCard />,
-      description: "Pay required fees online"
+      key: "visaProcessing",
+      title: "Visa Processing & Fingerprint",
+      description: "Employer sends visa block/visa number. Apply for E-Number via Enjaz/Etimad system. Candidate goes to Gerrys/Etimad Visa Center for biometrics.",
+      resources: [
+        { name: "Enjaz System", url: "https://enjazit.com.sa/" },
+        { name: "MOFA Services", url: "https://www.eservices.mofa.gov.sa/" },
+        { name: "VFS Global", url: "https://visa.vfsglobal.com/pak/en/sau/" }
+      ]
+    },
+    {
+      key: "finalClearance",
+      title: "Protector of Emigrants (Final Clearance)",
+      description: "After visa stamping, candidate must get Emigration Protector clearance with required documents. Protector issues Protector Sticker.",
+      resources: [
+        { name: "Protectorate Portal", url: "https://beoe.gov.pk/protectorate-of-emigrants" },
+        { name: "Required Documents", url: "#" }
+      ]
+    },
+    {
+      key: "travelArrangements",
+      title: "Travel Arrangements",
+      description: "Book air ticket (by employer or candidate). Candidate departs for KSA with original passport, CNIC copy, and contract.",
+      resources: [
+        { name: "Flight Booking", url: "#" },
+        { name: "Pre-Departure Checklist", url: "#" }
+      ]
     }
   ];
 
-  const markStepComplete = () => {
-    if (!completedSteps.includes(currentStep)) {
-      setCompletedSteps([...completedSteps, currentStep]);
-    }
-    
-    if (currentStep < steps.length - 1) {
-      setCurrentStep(currentStep + 1);
-    } else {
-      onComplete();
-    }
+  const completedSteps = Object.values(stepsData).filter(step => step.completed).length;
+  const progressPercentage = (completedSteps / processSteps.length) * 100;
+
+  const toggleStepCompletion = (stepKey) => {
+    setStepsData(prev => ({
+      ...prev,
+      [stepKey]: {
+        ...prev[stepKey],
+        completed: !prev[stepKey].completed
+      }
+    }));
   };
 
-  const goToStep = (stepIndex) => {
-    setCurrentStep(stepIndex);
+  const updateStepNotes = (stepKey, notes) => {
+    setStepsData(prev => ({
+      ...prev,
+      [stepKey]: {
+        ...prev[stepKey],
+        notes
+      }
+    }));
   };
 
-  const StepIndicator = () => (
-    <div className="process-steps">
-      {steps.map((step, index) => (
-        <div 
-          key={step.id} 
-          className={`step-indicator ${index === currentStep ? "active" : ""} ${completedSteps.includes(index) ? "completed" : ""}`}
-          onClick={() => goToStep(index)}
-        >
-          <div className="step-icon">
-            {completedSteps.includes(index) ? <FaCircleCheck /> : step.icon}
-          </div>
-          <div className="step-info">
-            <span className="step-title">{step.title}</span>
-            <span className="step-description">{step.description}</span>
-          </div>
-          <div className="step-connector"></div>
-        </div>
-      ))}
-    </div>
-  );
+  const handleBreadcrumbClick = (stepIndex) => {
+    setCurrentStep(stepIndex + 1);
+  };
 
-  const StepContent = () => {
-    const step = steps[currentStep];
-    
-    return (
-      <div className="step-content">
-        <div className="step-header">
-          <h2>{step.title}</h2>
-          <p>{step.description}</p>
-        </div>
-        
-        <div className="step-details">
-          {step.id === "demand" && (
-            <div className="demand-verification">
-              <h3>Demand Letter Details</h3>
-              <div className="detail-grid">
-                <div className="detail-item">
-                  <label>Employer Name</label>
-                  <span>Al-Nakheel Saudi Company</span>
-                </div>
-                <div className="detail-item">
-                  <label>Position</label>
-                  <span>{application.positions?.join(", ") || application.position}</span>
-                </div>
-                <div className="detail-item">
-                  <label>Salary</label>
-                  <span>SAR 2,500</span>
-                </div>
-                <div className="detail-item">
-                  <label>Contract Duration</label>
-                  <span>2 Years</span>
-                </div>
-              </div>
-              
-              <div className="verification-actions">
-                <div className="upload-section">
-                  <h4>Upload Verified Demand Letter</h4>
-                  <input type="file" accept=".pdf,.jpg,.png" />
-                </div>
-                
-                <div className="verification-options">
-                  <button className="btn secondary">Request Changes</button>
-                  <button className="btn" onClick={markStepComplete}>Verify & Continue</button>
-                </div>
-              </div>
-            </div>
-          )}
-          
-          {step.id === "documents" && (
-            <div className="document-verification">
-              <h3>Required Documents</h3>
-              <div className="documents-list">
-                <div className="document-item verified">
-                  <span>Passport Copy</span>
-                  <span className="status">Verified</span>
-                </div>
-                <div className="document-item pending">
-                  <span>Educational Certificates</span>
-                  <span className="status">Pending</span>
-                </div>
-                <div className="document-item missing">
-                  <span>Experience Letters</span>
-                  <span className="status">Missing</span>
-                </div>
-                <div className="document-item">
-                  <span>Photographs (4)</span>
-                  <span className="status">Not Uploaded</span>
-                </div>
-              </div>
-              
-              <div className="document-actions">
-                <button className="btn secondary">
-                  <FaPrint /> Print Document Checklist
-                </button>
-                <button className="btn" onClick={markStepComplete}>
-                  Mark as Verified
-                </button>
-              </div>
-            </div>
-          )}
-          
-          {step.id === "medical" && (
-            <div className="medical-process">
-              <h3>GAMCA Medical Appointment</h3>
-              <div className="appointment-details">
-                <div className="detail-item">
-                  <label>Appointment Date</label>
-                  <span>15 Nov 2023</span>
-                </div>
-                <div className="detail-item">
-                  <label>Time</label>
-                  <span>10:30 AM</span>
-                </div>
-                <div className="detail-item">
-                  <label>Center</label>
-                  <span>GAMCA Medical Center, Lahore</span>
-                </div>
-                <div className="detail-item">
-                  <label>Reference Number</label>
-                  <span>GAMCA-2023-876543</span>
-                </div>
-              </div>
-              
-              <div className="medical-instructions">
-                <h4>Instructions:</h4>
-                <ul>
-                  <li>Fasting required for 8 hours before appointment</li>
-                  <li>Bring original passport</li>
-                  <li>Bring 2 passport-size photographs</li>
-                  <li>Arrive 30 minutes before appointment time</li>
-                </ul>
-              </div>
-              
-              <div className="medical-actions">
-                <button className="btn secondary">Reschedule Appointment</button>
-                <button className="btn" onClick={markStepComplete}>
-                  Confirm Medical Completed
-                </button>
-              </div>
-            </div>
-          )}
-          
-          {step.id === "training" && (
-            <div className="training-process">
-              <h3>Training Requirements</h3>
-              <div className="training-options">
-                <div className="training-card">
-                  <h4>Basic Orientation</h4>
-                  <p>Mandatory for all overseas workers</p>
-                  <span className="duration">3 Days</span>
-                  <button className="btn">Schedule</button>
-                </div>
-                
-                <div className="training-card">
-                  <h4>Job-Specific Training</h4>
-                  <p>Required for selected positions</p>
-                  <span className="duration">5-10 Days</span>
-                  <button className="btn">Schedule</button>
-                </div>
-                
-                <div className="training-card">
-                  <h4>Language Course</h4>
-                  <p>Basic Arabic communication</p>
-                  <span className="duration">2 Weeks</span>
-                  <button className="btn">Schedule</button>
-                </div>
-              </div>
-              
-              <div className="training-actions">
-                <label className="checkbox">
-                  <input type="checkbox" />
-                  <span>No training required for this applicant</span>
-                </label>
-                
-                <button className="btn" onClick={markStepComplete}>
-                  Continue
-                </button>
-              </div>
-            </div>
-          )}
-          
-          {step.id === "visa" && (
-            <div className="visa-process">
-              <h3>Visa Application Process</h3>
-              
-              <div className="visa-timeline">
-                <div className="timeline-item completed">
-                  <span className="timeline-marker"></span>
-                  <div className="timeline-content">
-                    <h4>Application Submitted</h4>
-                    <p>Visa application submitted to embassy</p>
-                    <span className="timeline-date">12 Nov 2023</span>
-                  </div>
-                </div>
-                
-                <div className="timeline-item current">
-                  <span className="timeline-marker"></span>
-                  <div className="timeline-content">
-                    <h4>Under Processing</h4>
-                    <p>Application is being reviewed</p>
-                    <span className="timeline-date">Expected: 18 Nov 2023</span>
-                  </div>
-                </div>
-                
-                <div className="timeline-item">
-                  <span className="timeline-marker"></span>
-                  <div className="timeline-content">
-                    <h4>Approval</h4>
-                    <p>Visa approval notification</p>
-                  </div>
-                </div>
-                
-                <div className="timeline-item">
-                  <span className="timeline-marker"></span>
-                  <div className="timeline-content">
-                    <h4>Visa Stamping</h4>
-                    <p>Passport with visa stamp</p>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="visa-actions">
-                <button className="btn secondary">Download Application</button>
-                <button className="btn" onClick={markStepComplete}>
-                  Mark as Completed
-                </button>
-              </div>
-            </div>
-          )}
-          
-          {step.id === "payment" && (
-            <div className="payment-process">
-              <h3>Fee Payment</h3>
-              
-              <div className="payment-summary">
-                <div className="fee-breakdown">
-                  <h4>Fee Breakdown</h4>
-                  
-                  <div className="fee-item">
-                    <span>Processing Fee</span>
-                    <span>PKR 5,000</span>
-                  </div>
-                  
-                  <div className="fee-item">
-                    <span>Visa Fee</span>
-                    <span>PKR 25,000</span>
-                  </div>
-                  
-                  <div className="fee-item">
-                    <span>Medical Fee</span>
-                    <span>PKR 8,000</span>
-                  </div>
-                  
-                  <div className="fee-item">
-                    <span>Training Fee (if applicable)</span>
-                    <span>PKR 10,000</span>
-                  </div>
-                  
-                  <div className="fee-total">
-                    <span>Total Amount</span>
-                    <span>PKR 48,000</span>
-                  </div>
-                </div>
-                
-                <div className="payment-methods">
-                  <h4>Payment Methods</h4>
-                  
-                  <div className="payment-option selected">
-                    <label>
-                      <input type="radio" name="payment" defaultChecked />
-                      <span>Credit/Debit Card</span>
-                    </label>
-                  </div>
-                  
-                  <div className="payment-option">
-                    <label>
-                      <input type="radio" name="payment" />
-                      <span>Bank Transfer</span>
-                    </label>
-                  </div>
-                  
-                  <div className="payment-option">
-                    <label>
-                      <input type="radio" name="payment" />
-                      <span>JazzCash</span>
-                    </label>
-                  </div>
-                  
-                  <div className="payment-option">
-                    <label>
-                      <input type="radio" name="payment" />
-                      <span>EasyPaisa</span>
-                    </label>
-                  </div>
-                  
-                  <div className="card-details">
-                    <div className="form-row">
-                      <input type="text" placeholder="Card Number" />
-                    </div>
-                    
-                    <div className="form-row">
-                      <input type="text" placeholder="MM/YY" />
-                      <input type="text" placeholder="CVV" />
-                    </div>
-                    
-                    <div className="form-row">
-                      <input type="text" placeholder="Cardholder Name" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="payment-actions">
-                <button className="btn secondary">Download Invoice</button>
-                <button className="btn" onClick={markStepComplete}>
-                  Pay Now
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
-        
-        <div className="step-navigation">
-          {currentStep > 0 && (
-            <button 
-              className="btn secondary" 
-              onClick={() => setCurrentStep(currentStep - 1)}
-            >
-              <FaArrowLeft /> Previous
-            </button>
-          )}
-          
-          <button className="btn primary" onClick={markStepComplete}>
-            {currentStep === steps.length - 1 ? 'Complete Process' : 'Next'} <FaArrowRight />
-          </button>
-        </div>
-      </div>
-    );
+  const getFileIcon = (type) => {
+    if (type.includes('pdf')) return 'fa-file-pdf';
+    if (type.includes('word') || type.includes('doc')) return 'fa-file-word';
+    if (type.includes('sheet') || type.includes('xls')) return 'fa-file-excel';
+    return 'fa-file-alt';
+  };
+
+  const formatFileSize = (bytes) => {
+    if (bytes < 1024) return bytes + ' B';
+    else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+    else return (bytes / 1048576).toFixed(1) + ' MB';
   };
 
   return (
     <div className="application-process">
+          <PaymentTracker applicationId={application._id} />
+
       <div className="process-header">
         <button className="back-button" onClick={onBack}>
-          <FaArrowLeft /> Back to Applications
+          <i className="fas fa-arrow-left"></i> Back to Dashboard
         </button>
-        <h1>Application Process</h1>
-        <div className="applicant-info">
-          <h2>{application.fullName}</h2>
-          <p>{application.positions?.join(", ") || application.position}</p>
+        <h2>KSA Overseas Employment Processing</h2>
+        <div className="candidate-info">
+          <h3>{application.fullName}</h3>
+          <div className="info-grid">
+            <div className="info-item">
+              <span className="info-label">Position:</span>
+              <span className="info-value">{application.position}</span>
+            </div>
+            <div className="info-item">
+              <span className="info-label">Passport:</span>
+              <span className="info-value">{application.passportNumber}</span>
+            </div>
+            <div className="info-item">
+              <span className="info-label">Application Date:</span>
+              <span className="info-value">{application.applicationDate}</span>
+            </div>
+            <div className="info-item">
+              <span className="info-label">Status:</span>
+              <span className="info-value status-in-progress">In Progress</span>
+            </div>
+          </div>
         </div>
       </div>
-      
-      <div className="process-container">
-        <StepIndicator />
-        <StepContent />
+
+      <div className="progress-container">
+        <div className="progress-bar">
+          <div 
+            className="progress-fill" 
+            style={{ width: `${progressPercentage}%` }}
+          ></div>
+        </div>
+        <div className="progress-text">
+          <span>Application Progress</span>
+          <span>{Math.round(progressPercentage)}% Complete</span>
+        </div>
+      </div>
+
+      <div className="step-breadcrumb">
+        {processSteps.map((step, index) => {
+          const stepData = stepsData[step.key];
+          const isCompleted = stepData.completed;
+          const isCurrent = currentStep === index + 1;
+          
+          return (
+            <React.Fragment key={step.key}>
+              <div 
+                className={`breadcrumb-step ${isCompleted ? "completed" : ""} ${isCurrent ? "current" : ""}`}
+                onClick={() => handleBreadcrumbClick(index)}
+              >
+                <span className="breadcrumb-number">{index + 1}</span>
+                <span className="breadcrumb-title">{step.title}</span>
+                {isCompleted && <i className="fas fa-check"></i>}
+              </div>
+              {index < processSteps.length - 1 && (
+                <div className="breadcrumb-connector"></div>
+              )}
+            </React.Fragment>
+          );
+        })}
+      </div>
+
+      <div className="process-steps">
+        {processSteps.map((step, index) => {
+          const stepData = stepsData[step.key];
+          const isCompleted = stepData.completed;
+          const isCurrent = currentStep === index + 1;
+          
+          if (!isCurrent) return null;
+          
+          return (
+            <div 
+              key={step.key} 
+              className={`process-step ${isCompleted ? "completed" : ""} ${isCurrent ? "current" : ""}`}
+            >
+              <div className="step-header">
+                <div className="step-number">
+                  {isCompleted ? <i className="fas fa-check-circle"></i> : <i className="fas fa-circle"></i>}
+                </div>
+                <div className="step-title">
+                  <h3>Step {index + 1}: {step.title}</h3>
+                  <p>{step.description}</p>
+                </div>
+                <div className="step-actions">
+                  <button 
+                    className={`status-toggle ${isCompleted ? "completed" : ""}`}
+                    onClick={() => toggleStepCompletion(step.key)}
+                  >
+                    {isCompleted ? "Mark Incomplete" : "Mark Complete"}
+                  </button>
+                </div>
+              </div>
+
+              <div className="step-content">
+                <div className="step-notes">
+                  <label>Notes:</label>
+                  <textarea
+                    value={stepData.notes}
+                    onChange={(e) => updateStepNotes(step.key, e.target.value)}
+                    placeholder="Add notes about this step..."
+                  />
+                </div>
+
+                <div className="step-documents">
+                  <h4>Documents</h4>
+                  <div className="document-list">
+                    {stepData.documents.map((doc, docIndex) => (
+                      <div key={docIndex} className="document-item">
+                        <i className={`fas ${getFileIcon(doc.type)}`}></i>
+                        <span className="doc-name">{doc.name}</span>
+                        <span className="doc-size">({formatFileSize(doc.size)})</span>
+                        <span className="doc-date">{doc.uploadDate.toLocaleDateString()}</span>
+                        <button className="doc-remove">
+                          Remove
+                        </button>
+                      </div>
+                    ))}
+                    
+                    <button className="add-document">
+                      <i className="fas fa-plus"></i> Add Document
+                    </button>
+                  </div>
+                </div>
+
+                <div className="step-resources">
+                  <h4>Resources</h4>
+                  <div className="resource-links">
+                    {step.resources.map((resource, resIndex) => (
+                      <a 
+                        key={resIndex} 
+                        href={resource.url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="resource-link"
+                      >
+                        <i className="fas fa-external-link-alt"></i> {resource.name}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="process-actions">
+        <button 
+          className="btn secondary"
+          onClick={() => setCurrentStep(Math.max(1, currentStep - 1))}
+          disabled={currentStep === 1}
+        >
+          <i className="fas fa-arrow-left"></i> Previous Step
+        </button>
+        
+        <div className="step-indicator">
+          Step {currentStep} of {processSteps.length}
+        </div>
+        
+        {currentStep < processSteps.length ? (
+          <button 
+            className="btn primary"
+            onClick={() => setCurrentStep(currentStep + 1)}
+          >
+            Next Step <i className="fas fa-arrow-right"></i>
+          </button>
+        ) : (
+          <button className="btn success">
+            Complete Process
+          </button>
+        )}
       </div>
     </div>
   );

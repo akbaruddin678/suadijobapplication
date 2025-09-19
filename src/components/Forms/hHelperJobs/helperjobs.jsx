@@ -107,7 +107,7 @@ const ApplicationForm = () => {
     if (validateForm()) {
       setLoading(true);
       try {
-        const response = await fetch("/api/applications", {
+        const response = await fetch("http://cisdjob-env.eba-kipwaer2.ap-south-1.elasticbeanstalk.com/api/applications", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

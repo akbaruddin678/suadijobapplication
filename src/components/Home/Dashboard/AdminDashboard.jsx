@@ -88,7 +88,7 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
       }
 
       const response = await fetch(
-        "/api/applications/all",
+        "http://cisdjob-env.eba-kipwaer2.ap-south-1.elasticbeanstalk.com/api/applications/all",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -151,7 +151,7 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
 
       // First update the backend
       const response = await fetch(
-        `/api/applications/${id}/comment`,
+        `http://cisdjob-env.eba-kipwaer2.ap-south-1.elasticbeanstalk.com/api/applications/${id}/comment`,
         {
           method: "PUT",
           headers: {
@@ -274,7 +274,7 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
         backend: backendStatus,
       });
 
-      const response = await fetch(`/api/applications/${id}/status`, {
+      const response = await fetch(`http://cisdjob-env.eba-kipwaer2.ap-south-1.elasticbeanstalk.com/api/applications/${id}/status`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

@@ -1,12 +1,14 @@
 // client/src/components/LandingPage.jsx
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { FaGlobeEurope, FaArrowRight } from "react-icons/fa";
 import "./LandingPage.css";
 
 const LandingPage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [animateCards, setAnimateCards] = useState(false);
 
   const [hospitalityCurrentIndex, setHospitalityCurrentIndex] = useState(0);
   const [domesticCurrentIndex, setDomesticCurrentIndex] = useState(0);
@@ -16,9 +18,23 @@ const LandingPage = () => {
   const hospitalityCarouselRef = useRef(null);
   const domesticCarouselRef = useRef(null);
 
+  // Italy featured jobs data
+  const featuredItalyJobs = {
+    id: "italy-jobs",
+    title: "🇮🇹 Healthcare & Hospitality Courses in Italy",
+    description: "Professional Careers in Italy Begin Here, With Accredited Training + Job Support.",
+    path: "application-italyjobs",
+    color: "#e74a3b",
+    gradient: "linear-gradient(135deg, #ff6b6b 0%, #ee5a24 50%, #ff9ff3 100%)",
+    isFeatured: true
+  };
+
   // Unified Apply handler -> JobSelection
   const handleApply = (jobType = "any") => {
     navigate("/jobselection", { state: { jobType } });
+  };
+  const handleApplyItaly = (jobType = "any") => {
+    navigate("/jobselection/application-italyjobs", { state: { jobType } });
   };
 
   // Admin login handler
@@ -34,9 +50,16 @@ const LandingPage = () => {
     checkScreenSize();
     window.addEventListener("resize", checkScreenSize);
     window.addEventListener("scroll", onScroll);
+    
+    // Animation for featured section
+    const timer = setTimeout(() => {
+      setAnimateCards(true);
+    }, 300);
+    
     return () => {
       window.removeEventListener("resize", checkScreenSize);
       window.removeEventListener("scroll", onScroll);
+      clearTimeout(timer);
     };
   }, []);
 
@@ -125,14 +148,12 @@ const LandingPage = () => {
           </div>
 
           <nav className={`nav ${isMenuOpen ? "active" : ""}`}>
-            <a href="#positions" onClick={closeMenu}>Positions</a>
-            <a href="#benefits" onClick={closeMenu}>Benefits</a>
-            <a href="#details" onClick={closeMenu}>Details</a>
-            <a href="#job-types" onClick={closeMenu}>Job Types</a>
-
             <div className="nav-buttons">
               <button className="btn btn-primary" onClick={() => { closeMenu(); handleApply(); }}>
                 Apply For Jobs
+              </button>
+              <button className="btn btn-primary" onClick={() => { closeMenu(); handleApplyItaly(); }}>
+                Enroll in Italy Courses
               </button>
             </div>
           </nav>
@@ -167,10 +188,17 @@ const LandingPage = () => {
 
             <div className="cta-center" style={{ marginBottom: "5rem" }}>
               <div className="hero-buttons" style={{
-                marginTop:"2rem"
+                marginTop:"2rem",
+                display:"flex",
+                gap:"0.5rem",
+                justifyContent:"center",
+                alignItems:"center"
               }}>
                 <button className="btn btn-secondary" onClick={() => handleApply()}>
                   Explore All Jobs
+                </button>
+                <button className="btn btn-secondary" onClick={() => handleApplyItaly()}>
+                  Enroll in Italy Courses 
                 </button>
               </div>
             </div>
@@ -179,10 +207,10 @@ const LandingPage = () => {
           <div className="hero-image">
             <div className="image-placeholder">
               <div className="floating-card card-1">
-                <h4>Civil Workers</h4>
-                <p>Education Programs • Global</p>
+                <h4>Italy Programs</h4>
+                <p>Enroll in Italy Courses</p>
                 <span>Training & Placement</span>
-                <button className="btn-apply" onClick={() => handleApply("civil")}>Apply Now</button>
+                <button className="btn-apply" onClick={() => handleApplyItaly()}>Apply Now</button>
               </div>
               <div className="floating-card card-2">
                 <h4>Hospitality</h4>
@@ -195,6 +223,48 @@ const LandingPage = () => {
                 <p>Professional Development • Germany</p>
                 <span>Career Growth</span>
                 <button className="btn-apply" onClick={() => handleApply("germany")}>Apply Now</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Italy Jobs Section */}
+      <section className="featured-section">
+        <div className="container">
+          <div className="featured-header">
+            <h2>🌟 Featured Opportunity</h2>
+            <p>Don't miss this unique chance to join our Italy courses!</p>
+          </div>
+          <div 
+            className={`featured-job-link ${animateCards ? 'animate-in' : ''}`}
+            style={{ animationDelay: '0.1s' }}
+            onClick={() => handleApplyItaly()}
+          >
+            <div 
+              className="featured-job-card"
+              style={{ '--accent-color': featuredItalyJobs.color }}
+            >
+              <div className="featured-job-bg" style={{ background: featuredItalyJobs.gradient }}></div>
+              <div className="featured-job-content">
+                <div className="featured-job-icon" style={{ background: featuredItalyJobs.gradient }}>
+                  <FaGlobeEurope size={32} />
+                </div>
+                <div className="featured-job-text">
+                  <h3>{featuredItalyJobs.title}</h3>
+                  <p>{featuredItalyJobs.description}</p>
+                  <div className="featured-job-features">
+                    <span className="feature-badge">🏥 Healthcare</span>
+                    <span className="feature-badge">🏨 Hospitality</span>
+                    <span className="feature-badge">🇮🇹 Italy</span>
+                  </div>
+                </div>
+                <div className="featured-job-footer">
+                  <span className="apply-text">Apply Now</span>
+                  <div className="job-card-arrow">
+                    <FaArrowRight />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -321,7 +391,6 @@ const LandingPage = () => {
                         <div className="position-icon">{position.icon}</div>
                         <h4>{position.title}</h4>
                         <p>{position.description}</p>
-                        {/* <div className="position-salary">{position.salary}</div> */}
                         <button className="btn-apply-now" onClick={() => handleApply("hospitality")}>
                           Apply Now
                           <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -377,8 +446,7 @@ const LandingPage = () => {
                       <div className="position-card">
                         <div className="position-icon">{position.icon}</div>
                         <h4>{position.title}</h4>
-                        {/* <p>{position.description}</p> */}
-                        {/* <div className="position-salary">{position.salary}</div> */}
+                        <p>{position.description}</p>
                         <button className="btn-apply-now" onClick={() => handleApply("domestic")}>
                           Apply Now
                           <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -511,12 +579,6 @@ const LandingPage = () => {
             <div className="footer-section">
               <h3>College of International Skill Developments</h3>
               <p>Connecting talent with international opportunities across multiple industries and countries</p>
-              {/* <div className="social-links">
-                <a href="#"><span>📱</span></a>
-                <a href="#"><span>💻</span></a>
-                <a href="#"><span>📸</span></a>
-                <a href="#"><span>🐦</span></a>
-              </div> */}
             </div>
 
             <div className="footer-section">
@@ -534,7 +596,6 @@ const LandingPage = () => {
               <p>Phone: 0322 0547996</p>
               <p>Address: 9A - Shershah Block, Garden Town, Lahore</p>
               <p>Website: www.cisd.edu.pk</p>
-              {/* <p>Email: info@cisd.edu.pk</p> */}
             </div>
           </div>
 

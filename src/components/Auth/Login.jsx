@@ -4,7 +4,10 @@ import { useNavigate } from "react-router-dom";
 import "./Login.css";
 
 const Login = () => {
-  const [loginData, setLoginData] = useState({ email: "", password: "" });
+  const [loginData, setLoginData] = useState({
+    email: "",
+    password: "",
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -34,7 +37,7 @@ const Login = () => {
           "user",
           JSON.stringify({
             _id: data._id,
-            username: data.username,
+            email: data.email,
             role: "admin", // You might want to add role to your backend response
           })
         );

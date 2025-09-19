@@ -4,7 +4,7 @@ import healthImg from "./health.webp";
 
 const HealthcareForm = () => {
   const [formData, setFormData] = useState({
-    jobtitle: "healthcare",
+    jobtitle: "italy-jobs",
     fullName: "",
     age: "",
     gender: "",
@@ -30,9 +30,9 @@ const HealthcareForm = () => {
 
   const healthcarePrograms = [
     "O.S.S. - Healthcare Assistant",
-    "O.S.S.+S. – Specialized Healthcare Assistant", 
+    "O.S.S.+S. – Specialized Healthcare Assistant",
     "O.S.A. - Certified Social Care Operator",
-    "Other"
+    "Other",
   ];
 
   const showToast = (title, description, type = "success") => {
@@ -54,29 +54,36 @@ const HealthcareForm = () => {
     const newErrors = {};
 
     if (!formData.fullName.trim()) newErrors.fullName = "Full name is required";
+
     if (!formData.age || Number(formData.age) < 18 || Number(formData.age) > 65)
       newErrors.age = "Age must be between 18 and 65";
+
     if (!formData.gender) newErrors.gender = "Gender is required";
+
     if (!formData.currentResidence.trim())
       newErrors.currentResidence = "Current residence is required";
+
     if (!formData.contactNumber.trim())
       newErrors.contactNumber = "Contact number is required";
+
     if (!formData.email.trim() || !/\S+@\S+\.\S+/.test(formData.email))
       newErrors.email = "Valid email is required";
+
     if (!formData.passportNumber.trim())
       newErrors.passportNumber = "Passport number is required";
-    if (!formData.program)
-      newErrors.program = "Please select a healthcare program";
-    if (formData.program === "Other" && !formData.otherProgram.trim())
-      newErrors.otherProgram = "Please specify program";
+
     if (!formData.willingToRelocate)
       newErrors.willingToRelocate = "This field is required";
+
     if (!formData.preferredCity)
       newErrors.preferredCity = "Preferred city is required";
+
     if (formData.preferredCity === "Other" && !formData.otherCity.trim())
       newErrors.otherCity = "Please specify city";
+
     if (!formData.workedInItaly)
       newErrors.workedInItaly = "This field is required";
+
     if (!formData.whyWorkInItaly.trim())
       newErrors.whyWorkInItaly = "Please explain why you want to work in Italy";
 
@@ -84,42 +91,94 @@ const HealthcareForm = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  // add this helper above handleSubmit
+  const buildPayloadWithDefaults = () => {
+    const tmp = (v, fallback = "N/A") =>
+      v === undefined ||
+      v === null ||
+      (typeof v === "string" && v.trim() === "")
+        ? fallback
+        : v;
+
+    // Map your single program -> positions[] required by backend
+    const positionsSafe = formData.program ? [formData.program] : ["Other"];
+
+    return {
+      // keep your chosen jobtitle, fallback to "italycourse" if empty
+      jobtitle: formData.jobtitle || "italycourse",
+
+      // schema fields
+      fullName: tmp(formData.fullName),
+      age:
+        formData.age && !Number.isNaN(Number(formData.age))
+          ? Number(formData.age)
+          : 0,
+      gender: tmp(formData.gender),
+      currentResidence: tmp(formData.currentResidence),
+      contactNumber: tmp(formData.contactNumber),
+      email: tmp(formData.email),
+      passportNumber: tmp(formData.passportNumber),
+
+      positions: positionsSafe, // <- required array
+      otherPosition: positionsSafe.includes("Other")
+        ? tmp(formData.otherProgram)
+        : tmp(formData.otherProgram, ""),
+
+      willingToRelocate: tmp(formData.willingToRelocate),
+      otherRelocate: "", // not in your form; send empty
+      preferredCity: tmp(formData.preferredCity),
+      otherCity:
+        formData.preferredCity === "Other"
+          ? tmp(formData.otherCity)
+          : tmp(formData.otherCity, ""),
+
+      // map Italy fields to Saudi schema names the backend expects
+      workedInSaudi: tmp(formData.workedInItaly),
+      whyWorkInSaudi: tmp(formData.whyWorkInItaly),
+
+      // extra fields you collect (backend will ignore if not in schema)
+      reference: tmp(formData.reference, ""),
+      experience: tmp(formData.experience, ""),
+    };
+  };
+
+  // replace your handleSubmit with this (UI unchanged)
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validateForm()) {
-      setLoading(true);
-      try {
-        const response = await fetch("/api/applications", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        });
+    if (!validateForm()) return;
 
-        if (response.ok) {
-          setSubmitted(true);
-          showToast(
-            "Application Submitted",
-            "Your healthcare program application has been successfully submitted."
-          );
-        } else {
-          const data = await response.json();
-          showToast(
-            "Submission Failed",
-            data.message || "Error submitting application",
-            "error"
-          );
-        }
-      } catch {
+    setLoading(true);
+    try {
+      const payload = buildPayloadWithDefaults();
+
+      const response = await fetch("/api/applications", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
+        setSubmitted(true);
         showToast(
-          "Network Error",
-          "Please check your connection and try again",
+          "Application Submitted",
+          "Your healthcare program application has been successfully submitted."
+        );
+      } else {
+        const data = await response.json().catch(() => ({}));
+        showToast(
+          "Submission Failed",
+          data.message || "Error submitting application",
           "error"
         );
-      } finally {
-        setLoading(false);
       }
+    } catch {
+      showToast(
+        "Network Error",
+        "Please check your connection and try again",
+        "error"
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -130,7 +189,7 @@ const HealthcareForm = () => {
           <div className="success-content">
             <div className="success-icon">🏥</div>
             <h2 className="success-title">
-              Healthcare Application Submitted Successfully!
+              Application Submitted Successfully!
             </h2>
             <p className="success-description">
               Thank you for your application. We will review it and get back to

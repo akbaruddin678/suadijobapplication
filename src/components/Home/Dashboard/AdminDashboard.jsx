@@ -87,15 +87,12 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
         throw new Error("No authentication token found");
       }
 
-      const response = await fetch(
-        "http://cisdjob-env.eba-kipwaer2.ap-south-1.elasticbeanstalk.com/api/applications/all",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch("/api/applications/all", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
       if (!response.ok) {
         if (response.status === 401) {
@@ -150,17 +147,14 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
       }
 
       // First update the backend
-      const response = await fetch(
-        `http://cisdjob-env.eba-kipwaer2.ap-south-1.elasticbeanstalk.com/api/applications/${id}/comment`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ comment }),
-        }
-      );
+      const response = await fetch(`/api/applications/${id}/comment`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ comment }),
+      });
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
@@ -274,7 +268,7 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
         backend: backendStatus,
       });
 
-      const response = await fetch(`http://cisdjob-env.eba-kipwaer2.ap-south-1.elasticbeanstalk.com/api/applications/${id}/status`, {
+      const response = await fetch(`/api/applications/${id}/status`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

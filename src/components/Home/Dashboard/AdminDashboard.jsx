@@ -49,6 +49,7 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
     pipefitter: [],
     mechanical: [],
     helper: [],
+    italyjob: [],
   });
 
   const [loading, setLoading] = useState(true);
@@ -114,6 +115,7 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
         pipefitter: data.filter((app) => app.jobtitle === "pipefitter"),
         mechanical: data.filter((app) => app.jobtitle === "mechanical"),
         helper: data.filter((app) => app.jobtitle === "helper"),
+        italyjob: data.filter((app) => app.jobtitle === "italy-jobs"),
       };
 
       // Apply location filter if user has specific location
@@ -456,6 +458,13 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
       value: applications.mechanical.length,
       color: "mechanical",
     },
+    {
+      key: "italy-jobs",
+      icon: <FaHouse />,
+      title: "Italy Job Applications",
+      value: applications.italyjob.length,
+      color: "italy-jobs",
+    },
   ];
 
   const sortLabel = (key) =>
@@ -788,6 +797,7 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
       pipefitter: "Pipe Fitter",
       tailoriron: "Tailor and Ironer",
       helper: "Helper Jobs in Saudi Arabia",
+      italyjob: "Italy Jobs",
     };
 
     return (
@@ -1024,6 +1034,17 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
             <span>Helper Jobs in Saudi Arabia</span>
           </div>
 
+          <div
+            className={`menu-item ${activeTab === "italyjob" ? "active" : ""}`}
+            onClick={() => {
+              setActiveTab("italyjob");
+              setSidebarOpen(false);
+            }}
+          >
+            <FaIndustry />
+            <span>Italy Job</span>
+          </div>
+
           <div className="menu-item logout" onClick={onLogout}>
             <FaRightFromBracket />
             <span>Logout</span>
@@ -1076,6 +1097,7 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
           {activeTab === "pipefitter" && renderApplicationsTable("pipefitter")}
           {activeTab === "tailoriron" && renderApplicationsTable("tailoriron")}
           {activeTab === "helper" && renderApplicationsTable("helper")}
+          {activeTab === "italyjob" && renderApplicationsTable("italyjob")}
         </div>
       </main>
 
@@ -1130,16 +1152,18 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
                   label="Passport"
                   value={selectedApp.passportNumber}
                 />
+                {(selectedType || "").toLowerCase() !== "italyjob" && (
+                  <DetailRow
+                    label="Positions"
+                    value={
+                      Array.isArray(selectedApp.positions)
+                        ? selectedApp.positions.join(", ")
+                        : selectedApp.position || "—"
+                    }
+                  />
+                )}
                 <DetailRow
-                  label="Positions"
-                  value={
-                    Array.isArray(selectedApp.positions)
-                      ? selectedApp.positions.join(", ")
-                      : selectedApp.position || "—"
-                  }
-                />
-                <DetailRow
-                  label="Worked in Saudi"
+                  label="Previous Experience in the Country"
                   value={selectedApp.workedInSaudi}
                 />
                 <DetailRow

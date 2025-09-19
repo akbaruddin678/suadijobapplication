@@ -65,6 +65,22 @@ export default function LandingItaly() {
   // Single destination for all Apply buttons
   const APPLY_PATH = "/jobselection/application-italy-form";
 
+
+  useEffect(() => {
+    // prevent automatic restoration
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+    // jump to top on first render
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+
+    return () => {
+      if ("scrollRestoration" in window.history) {
+        window.history.scrollRestoration = "auto";
+      }
+    };
+  }, []);
+
   useEffect(() => {
     setIsVisible(true);
   }, []);

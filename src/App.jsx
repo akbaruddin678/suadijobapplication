@@ -23,6 +23,7 @@ import LandingPage from "./components/Home/LanidngPage.jsx";
 import JobSelection from "./components/JobSelection/JobSelection.jsx";
 import AdminDashboard from "./components/Home/Dashboard/AdminDashboard.jsx";
 import Login from "./components/Auth/Login.jsx";
+import ScrollToTop from "./components/ScrollToTop.jsx";
 
 import "./App.css";
 
@@ -84,6 +85,7 @@ const PublicRoute = ({ children }) => {
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <div className="App">
         <Routes>
           {/* Public Routes */}
@@ -92,14 +94,38 @@ function App() {
           {/* JobSelection hub + nested routes */}
           <Route path="/jobselection" element={<JobSelection />}>
             {/* General application forms */}
-            <Route path="application-hospitality" element={<ApplicationFormHospitality />} />
-            <Route path="application-domestic" element={<ApplicationFormDomestic />} />
-            <Route path="application-civil" element={<ApplicationFormCivil />} />
-            <Route path="application-germany" element={<ApplicationFormGermany />} />
-            <Route path="application-mechanical" element={<ApplicationFormMechanical />} />
-            <Route path="application-pipefitter" element={<ApplicationFormPipeFitter />} />
-            <Route path="application-tailor-ironer" element={<ApplicationFormTailorIroner />} />
-            <Route path="application-helperjobs" element={<ApplicationFormHelpers />} />
+            <Route
+              path="application-hospitality"
+              element={<ApplicationFormHospitality />}
+            />
+            <Route
+              path="application-domestic"
+              element={<ApplicationFormDomestic />}
+            />
+            <Route
+              path="application-civil"
+              element={<ApplicationFormCivil />}
+            />
+            <Route
+              path="application-germany"
+              element={<ApplicationFormGermany />}
+            />
+            <Route
+              path="application-mechanical"
+              element={<ApplicationFormMechanical />}
+            />
+            <Route
+              path="application-pipefitter"
+              element={<ApplicationFormPipeFitter />}
+            />
+            <Route
+              path="application-tailor-ironer"
+              element={<ApplicationFormTailorIroner />}
+            />
+            <Route
+              path="application-helperjobs"
+              element={<ApplicationFormHelpers />}
+            />
 
             {/* Italy landing + namespaced Italy program forms */}
             <Route path="application-italyjobs" element={<ItalyHomePage />} />

@@ -93,13 +93,16 @@ const ApplicationForm = () => {
     if (validateForm()) {
       setLoading(true);
       try {
-        const response = await fetch("/api/applications", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        });
+        const response = await fetch(
+          "/api/applications",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          }
+        );
 
         if (response.ok) {
           setSubmitted(true);
@@ -170,12 +173,15 @@ const ApplicationForm = () => {
         <div className="hero-overlay">
           <div className="hero-content">
             <h1 className="hero-title">
-              Saudi Arabia Job Application For Skilled Trades
+              Saudi Arabia Job Application For Tailor and Ironer
             </h1>
-            <p  style={{
-              color:"white"
-            }} className="hero-subtitle">
-              Construction & Technical Opportunities 2025-26
+            <p
+              style={{
+                color: "white",
+              }}
+              className="hero-subtitle"
+            >
+              Tailor and Ironer Job Opportunities 2025-26
             </p>
           </div>
         </div>

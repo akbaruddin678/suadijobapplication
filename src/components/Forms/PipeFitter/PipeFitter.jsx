@@ -180,10 +180,13 @@ const ApplicationForm = () => {
             <h1 className="hero-title">
               Saudi Arabia Job Application For Pipe-Fitter
             </h1>
-            <p  style={{
-              color:"white"
-            }} className="hero-subtitle">
-              Domestic Worker Opportunities 2025-26
+            <p
+              style={{
+                color: "white",
+              }}
+              className="hero-subtitle"
+            >
+              Pipe-Fitter Job Opportunities 2025-26
             </p>
           </div>
         </div>

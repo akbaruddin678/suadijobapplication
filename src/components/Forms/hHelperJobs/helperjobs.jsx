@@ -184,12 +184,15 @@ const ApplicationForm = () => {
         <div className="hero-overlay">
           <div className="hero-content">
             <h1 className="hero-title">
-              Saudi Arabia Job Application For Domestic
+              Saudi Arabia Job Application For Helpers
             </h1>
-            <p  style={{
-              color:"white"
-            }} className="hero-subtitle">
-              Domestic Worker Opportunities 2025-26
+            <p
+              style={{
+                color: "white",
+              }}
+              className="hero-subtitle"
+            >
+              Helper Work Opportunities 2025-26
             </p>
           </div>
         </div>

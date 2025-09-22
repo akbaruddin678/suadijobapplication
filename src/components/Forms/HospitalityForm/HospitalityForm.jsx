@@ -4,7 +4,7 @@ import saudiHeroImage from "../../../assets/react.svg";
 
 const ApplicationForm = () => {
   const [formData, setFormData] = useState({
-    jobtitle: "italycourse",
+    jobtitle: "hospitality",
     fullName: "",
     age: "",
     gender: "",
@@ -48,6 +48,7 @@ const ApplicationForm = () => {
       ...formData,
       [name]: value,
     });
+    // Clear error when user starts typing
     if (errors[name]) {
       setErrors({ ...errors, [name]: "" });
     }
@@ -68,7 +69,7 @@ const ApplicationForm = () => {
     const newErrors = {};
 
     if (!formData.fullName.trim()) newErrors.fullName = "Full name is required";
-    if (!formData.age || Number(formData.age) < 18 || Number(formData.age) > 65)
+    if (!formData.age || Number(formData.age) < 18 || Number(formData.age) > 40)
       newErrors.age = "Age must be between 18 and 65";
     if (!formData.gender) newErrors.gender = "Gender is required";
     if (!formData.currentResidence.trim())
@@ -104,67 +105,21 @@ const ApplicationForm = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // ✅ Fills any missing fields with temporary values before sending
-  const buildPayloadWithDefaults = () => {
-    const tmp = (v, fallback = "N/A") =>
-      v === undefined ||
-      v === null ||
-      (typeof v === "string" && v.trim() === "")
-        ? fallback
-        : v;
-
-    const positionsSafe =
-      Array.isArray(formData.positions) && formData.positions.length > 0
-        ? formData.positions
-        : ["Other"]; // Satisfy schema requirement
-
-    return {
-      // force correct jobtitle
-      jobtitle: "italycourse",
-      fullName: tmp(formData.fullName),
-      age:
-        formData.age && !Number.isNaN(Number(formData.age))
-          ? Number(formData.age)
-          : 0,
-      gender: tmp(formData.gender),
-      currentResidence: tmp(formData.currentResidence),
-      contactNumber: tmp(formData.contactNumber),
-      email: tmp(formData.email),
-      passportNumber: tmp(formData.passportNumber),
-      positions: positionsSafe,
-      otherPosition: positionsSafe.includes("Other")
-        ? tmp(formData.otherPosition)
-        : tmp(formData.otherPosition, ""),
-      willingToRelocate: tmp(formData.willingToRelocate),
-      otherRelocate:
-        formData.willingToRelocate === "Other"
-          ? tmp(formData.otherRelocate)
-          : tmp(formData.otherRelocate, ""),
-      preferredCity: tmp(formData.preferredCity),
-      otherCity:
-        formData.preferredCity === "Other"
-          ? tmp(formData.otherCity)
-          : tmp(formData.otherCity, ""),
-      workedInSaudi: tmp(formData.workedInSaudi),
-      whyWorkInSaudi: tmp(formData.whyWorkInSaudi),
-    };
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (validateForm()) {
       setLoading(true);
       try {
-        const payload = buildPayloadWithDefaults();
-
-        const response = await fetch("/api/applications", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
-        });
+        const response = await fetch(
+          "/api/applications",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          }
+        );
 
         if (response.ok) {
           setSubmitted(true);
@@ -173,12 +128,12 @@ const ApplicationForm = () => {
             "Your job application has been successfully submitted."
           );
         } else {
-          let message = "Error submitting application";
-          try {
-            const data = await response.json();
-            message = data.message || message;
-          } catch (_) {}
-          showToast("Submission Failed", message, "error");
+          const data = await response.json();
+          showToast(
+            "Submission Failed",
+            data.message || "Error submitting application",
+            "error"
+          );
         }
       } catch (error) {
         showToast(
@@ -215,9 +170,9 @@ const ApplicationForm = () => {
     );
   }
 
-  // ⬇️ UI unchanged from your version ⬇️
   return (
     <div className="application-container">
+      {/* Toast Notification */}
       {toast && (
         <div className={`toast ${toast.type} fade-in`}>
           <div className="toast-title">{toast.title}</div>
@@ -225,6 +180,7 @@ const ApplicationForm = () => {
         </div>
       )}
 
+      {/* Hero Section */}
       <div className="hero-section">
         <img
           src={saudiHeroImage}
@@ -236,13 +192,19 @@ const ApplicationForm = () => {
             <h1 className="hero-title">
               Saudi Arabia Job Application For Hospitality
             </h1>
-            <p style={{ color: "white" }} className="hero-subtitle">
-              Domestic Worker Opportunities 2025-26
+            <p
+              style={{
+                color: "white",
+              }}
+              className="hero-subtitle"
+            >
+              Hospitality Job Opportunities 2025-26
             </p>
           </div>
         </div>
       </div>
 
+      {/* Main Form */}
       <div className="form-wrapper">
         <div className="form-card slide-up">
           <div className="form-header">
@@ -254,7 +216,7 @@ const ApplicationForm = () => {
 
           <div className="form-content">
             <form onSubmit={handleSubmit}>
-              {/* Personal Information */}
+              {/* Personal Information Section */}
               <div className="form-section">
                 <div className="section-header">
                   <div className="section-number">1</div>
@@ -275,7 +237,7 @@ const ApplicationForm = () => {
                 </div>
 
                 <div className="form-grid">
-                  <input type="hidden" name="jobtitle" value="italycourse" />
+                  <input type="hidden" name="jobtitle" value="hospitality" />
 
                   <div className="form-group">
                     <label className="form-label" htmlFor="fullName">
@@ -303,7 +265,7 @@ const ApplicationForm = () => {
                       type="number"
                       id="age"
                       min="18"
-                      max="65"
+                      max="40"
                       className={`form-input ${errors.age ? "error" : ""}`}
                       value={formData.age}
                       onChange={(e) => handleChange("age", e.target.value)}
@@ -455,7 +417,7 @@ const ApplicationForm = () => {
                 </div>
               </div>
 
-              {/* Job Preferences */}
+              {/* Job Preferences Section */}
               <div className="form-section">
                 <div className="section-header">
                   <div className="section-number">2</div>
@@ -777,6 +739,7 @@ const ApplicationForm = () => {
                 </div>
               </div>
 
+              {/* Submit Button */}
               <div className="submit-section">
                 <button
                   type="submit"

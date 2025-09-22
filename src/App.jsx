@@ -119,7 +119,7 @@ function App() {
               element={<ApplicationFormPipeFitter />}
             />
             <Route
-              path="application-tailor-ironer"
+              path="application-tailor/ironer"
               element={<ApplicationFormTailorIroner />}
             />
             <Route

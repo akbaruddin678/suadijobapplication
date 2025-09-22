@@ -101,13 +101,16 @@ const ApplicationForm = () => {
     if (validateForm()) {
       setLoading(true);
       try {
-        const response = await fetch("/api/applications", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        });
+        const response = await fetch(
+          "/api/applications",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          }
+        );
 
         if (response.ok) {
           setSubmitted(true);
@@ -178,10 +181,13 @@ const ApplicationForm = () => {
         <div className="hero-overlay">
           <div className="hero-content">
             <h1 className="hero-title">Germany Application For Internship</h1>
-            <p  style={{
-              color:"white"
-            }} className="hero-subtitle">
-              Domestic Worker Opportunities 2025-26
+            <p
+              style={{
+                color: "white",
+              }}
+              className="hero-subtitle"
+            >
+              Germany Internship Opportunities 2025-26
             </p>
           </div>
         </div>

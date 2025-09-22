@@ -83,6 +83,17 @@ const PublicRoute = ({ children }) => {
 /* ---------------- App ---------------- */
 
 function App() {
+  // Simple global logout handler: clears auth and redirects to /login
+  const handleLogout = () => {
+    try {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+    } finally {
+      // hard redirect to ensure all state resets
+      window.location.href = "/login";
+    }
+  };
+
   return (
     <Router>
       <ScrollToTop />
@@ -147,7 +158,7 @@ function App() {
             path="/admin/*"
             element={
               <ProtectedRoute>
-                <AdminDashboard />
+                <AdminDashboard onLogout={handleLogout} />
               </ProtectedRoute>
             }
           />

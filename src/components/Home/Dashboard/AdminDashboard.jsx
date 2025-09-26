@@ -78,36 +78,52 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
 
   const commentTimeout = useRef(null);
 
+  const startApplicationProcess = (type, app) => {
+    setSelectedProcessApp(app); // Set the selected application
+    setViewingProcess(true); // Open the application process form
+  };
   const fetchApplications = async () => {
     try {
       setLoading(true);
       setError(null);
 
       const token = localStorage.getItem("token");
+
       if (!token) {
-        throw new Error("No authentication token found");
+        window.location.href = "/login";
+        throw new Error("Access Denied. Please login again.");
       }
 
-      const response = await fetch("/api/applications/all", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        "https://hungry-hopper.210-56-25-68.plesk.page/api/applications/all",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (!response.ok) {
         if (response.status === 401) {
           localStorage.removeItem("token");
+          window.location.href = "/login";
           throw new Error("Session expired. Please login again.");
         }
         throw new Error(`Server error: ${response.status}`);
       }
 
       const data = await response.json();
+      const normalizedData = data.map((app) => ({
+        ...app,
+        status: (app.status || "pending").toLowerCase(),
+      }));
 
       // Process data into categories based on jobtitle
       const processedData = {
-        hospitality: data.filter((app) => app.jobtitle === "hospitality"),
+        hospitality: normalizedData.filter(
+          (app) => app.jobtitle === "hospitality"
+        ),
         germany: data.filter((app) => app.jobtitle === "germany"),
         civil: data.filter((app) => app.jobtitle === "civil"),
         domestic: data.filter((app) => app.jobtitle === "domestic"),
@@ -115,7 +131,7 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
         pipefitter: data.filter((app) => app.jobtitle === "pipefitter"),
         mechanical: data.filter((app) => app.jobtitle === "mechanical"),
         helper: data.filter((app) => app.jobtitle === "helper"),
-        italyjob: data.filter((app) => app.jobtitle === "italy-jobs"),
+        italyjob: normalizedData.filter((app) => app.jobtitle === "italy-jobs"),
       };
 
       // Apply location filter if user has specific location
@@ -149,14 +165,17 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
       }
 
       // First update the backend
-      const response = await fetch(`/api/applications/${id}/comment`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ comment }),
-      });
+      const response = await fetch(
+        `https://hungry-hopper.210-56-25-68.plesk.page/api/applications/${id}/comment`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ comment }),
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
@@ -253,8 +272,11 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
   const updateApplicationStatus = async (type, id, newStatus) => {
     try {
       const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
 
-      // Convert frontend status to backend format (capitalize first letter)
+      // Map frontend status to backend status format
       const statusMap = {
         pending: "Pending",
         reviewed: "Reviewed",
@@ -265,19 +287,17 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
 
       const backendStatus = statusMap[newStatus] || newStatus;
 
-      console.log("Updating status:", {
-        frontend: newStatus,
-        backend: backendStatus,
-      });
-
-      const response = await fetch(`/api/applications/${id}/status`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ status: backendStatus }),
-      });
+      const response = await fetch(
+        `https://hungry-hopper.210-56-25-68.plesk.page/api/applications/${id}/status`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ status: backendStatus }),
+        }
+      );
 
       if (!response.ok) {
         let errorMessage = "Failed to update status";
@@ -290,9 +310,10 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
         throw new Error(errorMessage);
       }
 
+      // After the successful update, fetch the applications again or update them in the local state
       const updatedApplication = await response.json();
 
-      // Update local state - keep frontend format (lowercase)
+      // Update the application status in the local state
       setApplications((prev) => {
         const updated = { ...prev };
         const appIndex = (updated[type] || []).findIndex(
@@ -308,7 +329,7 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
         return updated;
       });
 
-      // Update modal if open
+      // Update the selected application status in the modal if it's open
       if (isModalOpen && selectedApp && selectedApp._id === id) {
         setSelectedApp((prev) => ({ ...prev, status: newStatus }));
       }
@@ -316,11 +337,6 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
       console.error("Error updating status:", err);
       alert(`Failed to update status: ${err.message}`);
     }
-  };
-
-  const startApplicationProcess = (type, app) => {
-    setSelectedProcessApp({ ...app, type });
-    setViewingProcess(true);
   };
 
   // Derived helpers
@@ -342,11 +358,14 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
       rejected: 0,
       completed: 0,
     };
+
+    // Loop over all applications and count the occurrences of each status
     allApplications.forEach((a) => {
       if (tally[a.status] !== undefined) tally[a.status]++;
     });
+
     return tally;
-  }, [allApplications]);
+  }, [applications]); // Recalculate when the applications state changes
 
   // Global filter/sort
   const applyListFilters = (list) => {
@@ -1139,7 +1158,7 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
                       : "N/A"
                   }
                 />
-                <DetailRow label="City" value={selectedApp.city} />
+                <DetailRow label="City" value={selectedApp.preferredCity} />
                 <DetailRow label="Email" value={selectedApp.email} />
                 <DetailRow label="Contact" value={selectedApp.contactNumber} />
                 <DetailRow label="Age" value={selectedApp.age} />
@@ -1200,14 +1219,15 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
                 <select
                   id="statusSel"
                   className="status-select"
-                  value={selectedApp.status}
-                  onChange={(e) =>
+                  value={selectedApp?.status} // Ensure the selected status is passed here
+                  onChange={(e) => {
+                    const newStatus = e.target.value;
                     updateApplicationStatus(
                       selectedType,
                       selectedApp._id,
-                      e.target.value
-                    )
-                  }
+                      newStatus
+                    );
+                  }}
                 >
                   <option value="pending">Pending</option>
                   <option value="reviewed">Reviewed</option>

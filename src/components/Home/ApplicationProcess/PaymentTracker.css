@@ -561,3 +561,63 @@
     width: 100%;
   }
 }
+
+
+/*  */
+
+/* styles.css */
+
+/* Payment History Section */
+.payment-history {
+  padding: 1.5rem;
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Title of Payment History */
+.payment-history h4 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+/* Table Styling */
+.payment-history table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Table Header */
+.payment-history th {
+  padding: 0.5rem 1rem;
+  text-align: left;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #4a5568;
+  background-color: #f7fafc;
+}
+
+/* Table Rows */
+.payment-history td {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  color: #2d3748;
+}
+
+/* Alternating Row Colors */
+.payment-history tr:nth-child(even) {
+  background-color: #f9fafb;
+}
+
+.payment-history tr:nth-child(odd) {
+  background-color: white;
+}
+
+/* Row Borders */
+.payment-history tr {
+  border-bottom: 1px solid #e2e8f0;
+}
+
+
+/*  */

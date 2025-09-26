@@ -137,7 +137,10 @@ const ApplicationProcess = ({ application, onBack }) => {
 
   return (
     <div className="application-process">
-          <PaymentTracker applicationId={application._id} />
+      <PaymentTracker
+        applicationId={application._id}
+        application={application}
+      />
 
       <div className="process-header">
         <button className="back-button" onClick={onBack}>
@@ -169,8 +172,8 @@ const ApplicationProcess = ({ application, onBack }) => {
 
       <div className="progress-container">
         <div className="progress-bar">
-          <div 
-            className="progress-fill" 
+          <div
+            className="progress-fill"
             style={{ width: `${progressPercentage}%` }}
           ></div>
         </div>
@@ -185,11 +188,13 @@ const ApplicationProcess = ({ application, onBack }) => {
           const stepData = stepsData[step.key];
           const isCompleted = stepData.completed;
           const isCurrent = currentStep === index + 1;
-          
+
           return (
             <React.Fragment key={step.key}>
-              <div 
-                className={`breadcrumb-step ${isCompleted ? "completed" : ""} ${isCurrent ? "current" : ""}`}
+              <div
+                className={`breadcrumb-step ${isCompleted ? "completed" : ""} ${
+                  isCurrent ? "current" : ""
+                }`}
                 onClick={() => handleBreadcrumbClick(index)}
               >
                 <span className="breadcrumb-number">{index + 1}</span>
@@ -209,25 +214,35 @@ const ApplicationProcess = ({ application, onBack }) => {
           const stepData = stepsData[step.key];
           const isCompleted = stepData.completed;
           const isCurrent = currentStep === index + 1;
-          
+
           if (!isCurrent) return null;
-          
+
           return (
-            <div 
-              key={step.key} 
-              className={`process-step ${isCompleted ? "completed" : ""} ${isCurrent ? "current" : ""}`}
+            <div
+              key={step.key}
+              className={`process-step ${isCompleted ? "completed" : ""} ${
+                isCurrent ? "current" : ""
+              }`}
             >
               <div className="step-header">
                 <div className="step-number">
-                  {isCompleted ? <i className="fas fa-check-circle"></i> : <i className="fas fa-circle"></i>}
+                  {isCompleted ? (
+                    <i className="fas fa-check-circle"></i>
+                  ) : (
+                    <i className="fas fa-circle"></i>
+                  )}
                 </div>
                 <div className="step-title">
-                  <h3>Step {index + 1}: {step.title}</h3>
+                  <h3>
+                    Step {index + 1}: {step.title}
+                  </h3>
                   <p>{step.description}</p>
                 </div>
                 <div className="step-actions">
-                  <button 
-                    className={`status-toggle ${isCompleted ? "completed" : ""}`}
+                  <button
+                    className={`status-toggle ${
+                      isCompleted ? "completed" : ""
+                    }`}
                     onClick={() => toggleStepCompletion(step.key)}
                   >
                     {isCompleted ? "Mark Incomplete" : "Mark Complete"}
@@ -252,14 +267,16 @@ const ApplicationProcess = ({ application, onBack }) => {
                       <div key={docIndex} className="document-item">
                         <i className={`fas ${getFileIcon(doc.type)}`}></i>
                         <span className="doc-name">{doc.name}</span>
-                        <span className="doc-size">({formatFileSize(doc.size)})</span>
-                        <span className="doc-date">{doc.uploadDate.toLocaleDateString()}</span>
-                        <button className="doc-remove">
-                          Remove
-                        </button>
+                        <span className="doc-size">
+                          ({formatFileSize(doc.size)})
+                        </span>
+                        <span className="doc-date">
+                          {doc.uploadDate.toLocaleDateString()}
+                        </span>
+                        <button className="doc-remove">Remove</button>
                       </div>
                     ))}
-                    
+
                     <button className="add-document">
                       <i className="fas fa-plus"></i> Add Document
                     </button>
@@ -270,14 +287,15 @@ const ApplicationProcess = ({ application, onBack }) => {
                   <h4>Resources</h4>
                   <div className="resource-links">
                     {step.resources.map((resource, resIndex) => (
-                      <a 
-                        key={resIndex} 
-                        href={resource.url} 
-                        target="_blank" 
+                      <a
+                        key={resIndex}
+                        href={resource.url}
+                        target="_blank"
                         rel="noopener noreferrer"
                         className="resource-link"
                       >
-                        <i className="fas fa-external-link-alt"></i> {resource.name}
+                        <i className="fas fa-external-link-alt"></i>{" "}
+                        {resource.name}
                       </a>
                     ))}
                   </div>
@@ -289,29 +307,27 @@ const ApplicationProcess = ({ application, onBack }) => {
       </div>
 
       <div className="process-actions">
-        <button 
+        <button
           className="btn secondary"
           onClick={() => setCurrentStep(Math.max(1, currentStep - 1))}
           disabled={currentStep === 1}
         >
           <i className="fas fa-arrow-left"></i> Previous Step
         </button>
-        
+
         <div className="step-indicator">
           Step {currentStep} of {processSteps.length}
         </div>
-        
+
         {currentStep < processSteps.length ? (
-          <button 
+          <button
             className="btn primary"
             onClick={() => setCurrentStep(currentStep + 1)}
           >
             Next Step <i className="fas fa-arrow-right"></i>
           </button>
         ) : (
-          <button className="btn success">
-            Complete Process
-          </button>
+          <button className="btn success">Complete Process</button>
         )}
       </div>
     </div>

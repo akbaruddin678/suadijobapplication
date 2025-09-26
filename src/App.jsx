@@ -40,9 +40,12 @@ const ProtectedRoute = ({ children }) => {
 
       if (token && savedUser) {
         try {
-          const response = await fetch("/api/auth/verify", {
-            headers: { Authorization: `Bearer ${token}` },
-          });
+          const response = await fetch(
+            "https://hungry-hopper.210-56-25-68.plesk.page/api/auth/verify",
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
           if (response.ok) {
             setUser(JSON.parse(savedUser));
           } else {

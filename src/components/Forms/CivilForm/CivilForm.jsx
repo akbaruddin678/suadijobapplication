@@ -100,13 +100,16 @@ const ApplicationForm = () => {
     if (validateForm()) {
       setLoading(true);
       try {
-        const response = await fetch("/api/applications", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        });
+        const response = await fetch(
+          "https://hungry-hopper.210-56-25-68.plesk.page/api/applications",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          }
+        );
 
         if (response.ok) {
           setSubmitted(true);
@@ -179,9 +182,12 @@ const ApplicationForm = () => {
             <h1 className="hero-title">
               Saudi Arabia Job Application For Skilled Trades
             </h1>
-            <p style={{
-              color:"white"
-            }} className="hero-subtitle">
+            <p
+              style={{
+                color: "white",
+              }}
+              className="hero-subtitle"
+            >
               Construction & Technical Opportunities 2025-26
             </p>
           </div>

@@ -151,11 +151,14 @@ const HealthcareForm = () => {
     try {
       const payload = buildPayloadWithDefaults();
 
-      const response = await fetch("/api/applications", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      const response = await fetch(
+        "https://hungry-hopper.210-56-25-68.plesk.page/api/applications",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }
+      );
 
       if (response.ok) {
         setSubmitted(true);

@@ -102,7 +102,7 @@ const ApplicationForm = () => {
       setLoading(true);
       try {
         const response = await fetch(
-          "/api/applications",
+          "https://hungry-hopper.210-56-25-68.plesk.page/api/applications",
           {
             method: "POST",
             headers: {

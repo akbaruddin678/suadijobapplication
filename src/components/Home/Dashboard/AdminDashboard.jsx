@@ -164,11 +164,11 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
         throw new Error("No authentication token found");
       }
 
-      // First update the backend
+      // First update the backend using POST
       const response = await fetch(
         `https://hungry-hopper.210-56-25-68.plesk.page/api/applications/${id}/comment`,
         {
-          method: "PUT",
+          method: "POST", // Changed from PUT to POST
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -287,10 +287,11 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
 
       const backendStatus = statusMap[newStatus] || newStatus;
 
+      // Use POST instead of PUT for updating status
       const response = await fetch(
         `https://hungry-hopper.210-56-25-68.plesk.page/api/applications/${id}/status`,
         {
-          method: "PUT",
+          method: "POST", // Changed from PUT to POST
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

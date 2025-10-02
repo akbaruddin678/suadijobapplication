@@ -131,6 +131,78 @@ body {
   align-items: center;
 }
 
+
+/* Banner */
+
+/* Banner directly under header content */
+.top-banner {
+  width: 100%;
+  background: linear-gradient(90deg, #ff6b6b, #feca57, #48dbfb);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;     /* slim height */
+  box-sizing: border-box;      /* prevent horizontal overflow */
+  border-top: 1px solid rgba(255,255,255,0.25);
+  width: 700px;
+  margin: 0px 0px 0px 30%;
+}
+
+.top-banner p {
+  margin: 0;
+  flex: 1;                     /* text takes remaining space */
+  line-height: 1.3;
+  font-size: 0.95rem;
+}
+
+.banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: nowrap;
+}
+
+.btn-banner {
+  background: #fff;
+  color: #e74a3b;
+  border: none;
+  padding: 0.35rem 0.8rem;
+  border-radius: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-banner:hover {
+  background: #e74a3b;
+  color: #fff;
+}
+
+.banner-close {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.2rem 0.35rem;
+  transition: opacity 0.2s ease;
+}
+
+.banner-close:hover {
+  opacity: 0.7;
+}
+
+/* Prevent accidental horizontal scrolls anywhere */
+.landing-page {
+  overflow-x: hidden;
+}
+
+/* Banner end */
+
 .logo h2 {
   background: var(--gradient-primary);
   -webkit-background-clip: text;
@@ -1521,3 +1593,7 @@ body {
     flex-direction: column;
   }
 }
+
+./* Make sure header stays above content */
+
+

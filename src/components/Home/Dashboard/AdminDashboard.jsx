@@ -603,6 +603,233 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
       </div>
     );
   }
+  // ---- Modern CV helpers (DOC download from HTML) ----
+
+  // ===== Modern Minimal CV (.doc via HTML) =====
+
+  // value helpers
+  const has = (v) => v !== undefined && v !== null && String(v).trim() !== "";
+  const safe = (v) => (has(v) ? String(v).trim() : "");
+
+  // compact list → chips
+  const chips = (arr = []) =>
+    arr.length
+      ? `<div class="chips">${arr
+          .map((t) => `<span class="chip">${t}</span>`)
+          .join("")}</div>`
+      : "";
+
+  // name initials avatar
+  const initials = (name = "") =>
+    name
+      .trim()
+      .split(/\s+/)
+      .slice(0, 2)
+      .map((s) => s[0]?.toUpperCase())
+      .join("") || "A";
+
+  // render label/value rows only if value exists
+  const rows = (pairs) =>
+    pairs
+      .filter(({ value }) => has(value))
+      .map(
+        ({ label, value }) => `
+      <div class="row">
+        <div class="label">${label}</div>
+        <div class="value">${value}</div>
+      </div>`
+      )
+      .join("");
+
+  // render a section card only if it has content
+  const sectionCard = (title, innerHtml) => {
+    // strip tags to check if there’s visible content
+    const plain = innerHtml.replace(/<[^>]+>/g, "").trim();
+    return plain
+      ? `
+      <section class="card">
+        <h3>${title}</h3>
+        ${innerHtml}
+      </section>`
+      : "";
+  };
+
+  const buildCVHtml = (app, formTitle = "Application") => {
+    const submitted = has(app?.createdAt)
+      ? new Date(app.createdAt).toLocaleDateString()
+      : "";
+
+    const posArray = Array.isArray(app?.positions)
+      ? app.positions.filter(has)
+      : has(app?.position)
+      ? [app.position]
+      : [];
+
+    // status chip (only if exists)
+    const statusChip = has(app?.status)
+      ? `<span class="status ${String(app.status).toLowerCase()}">${
+          app.status
+        }</span>`
+      : "";
+
+    // sections
+    const contact = rows([
+      { label: "Email", value: safe(app?.email) },
+      { label: "Phone", value: safe(app?.contactNumber) },
+      { label: "City", value: safe(app?.city) },
+      { label: "Current Residence", value: safe(app?.currentResidence) },
+    ]);
+
+    const profile = rows([
+      { label: "Age", value: safe(app?.age) },
+      { label: "Gender", value: safe(app?.gender) },
+      { label: "Passport No.", value: safe(app?.passportNumber) },
+    ]);
+
+    const preferences = rows([
+      { label: "Worked in Country Before", value: safe(app?.workedInSaudi) },
+      { label: "Willing to Relocate", value: safe(app?.willingToRelocate) },
+      { label: "Preferred City", value: safe(app?.preferredCity) },
+    ]);
+
+    const review = rows([
+      { label: "Reviewer Comment", value: safe(app?.comment) },
+    ]);
+
+    // positions chip row
+    const positionsBlock = posArray.length
+      ? `<div class="block">
+         <div class="block-title">Positions</div>
+         ${chips(posArray)}
+       </div>`
+      : "";
+
+    return `
+  <!DOCTYPE html>
+  <html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>CV - ${safe(app?.fullName) || "Applicant"}</title>
+    <style>
+      :root{
+        --ink:#101317;
+        --muted:#6b7280;
+        --line:#e5e7eb;
+        --card:#ffffff;
+        --bg:#f7f8fb;
+        --accent:#0ea5e9; /* sky-500 */
+        --accent-ink:#075985;
+        --ok:#16a34a; --warn:#f59e0b; --bad:#ef4444; --mutedpill:#64748b;
+        --chip-bg:#eef2ff; --chip-ink:#3730a3; --chip-line:#e0e7ff;
+      }
+      *{box-sizing:border-box;}
+      body{margin:0;background:var(--bg);color:var(--ink);
+           font:14px/1.55 -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica,Arial;}
+      .cv{max-width:840px;margin:0 auto;padding:28px;}
+
+      /* Header */
+      .header{
+        background:linear-gradient(120deg, var(--accent), #22c1c3);
+        color:#fff;border-radius:16px;padding:18px 20px;margin-bottom:16px;
+        display:flex;align-items:center;gap:14px;
+      }
+      .avatar{
+        width:56px;height:56px;border-radius:12px;background:rgba(255,255,255,.15);
+        display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;
+      }
+      .h-meta{flex:1;min-width:0;}
+      .h-title{margin:0;font-size:20px;font-weight:800;letter-spacing:.2px;}
+      .h-sub{margin:4px 0 0;font-size:12px;opacity:.92;}
+      .h-tags{margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+
+      /* Status pill */
+      .status{
+        display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;
+        background:rgba(255,255,255,.18);color:#fff;font-weight:700;font-size:12px;
+      }
+      .status.accepted,.status.completed{background:rgba(22,163,74,.2);color:#dcfce7;}
+      .status.reviewed{background:rgba(245,158,11,.2);color:#fff7ed;}
+      .status.rejected{background:rgba(239,68,68,.22);color:#fee2e2;}
+      .status.pending{background:rgba(255,255,255,.18);}
+
+      /* Cards */
+      .card{
+        background:var(--card);border:1px solid var(--line);border-radius:14px;
+        padding:16px;margin:12px 0;box-shadow:0 1px 0 rgba(0,0,0,0.03);
+      }
+      .card h3{
+        margin:0 0 10px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+      }
+
+      /* Rows */
+      .row{display:grid;grid-template-columns:180px 1fr;gap:8px 14px;padding:6px 0;border-bottom:1px dashed var(--line);}
+      .row:last-child{border-bottom:none;}
+      .label{color:var(--muted);}
+      .value{color:var(--ink);font-weight:600;word-break:break-word;}
+
+      /* Chips & blocks */
+      .block{margin-top:8px;}
+      .block-title{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.12em;margin-bottom:6px;}
+      .chips{display:flex;gap:8px;flex-wrap:wrap;}
+      .chip{
+        background:var(--chip-bg);color:var(--chip-ink);border:1px solid var(--chip-line);
+        padding:4px 10px;border-radius:999px;font-weight:700;font-size:12px;
+      }
+
+      /* Footer */
+      .footer{color:var(--muted);font-size:12px;text-align:right;margin-top:8px;}
+
+      @media (max-width:640px){
+        .row{grid-template-columns:1fr;}
+      }
+    </style>
+  </head>
+  <body>
+    <div class="cv">
+      <header class="header">
+        <div class="avatar">${initials(app?.fullName || "")}</div>
+        <div class="h-meta">
+          <h1 class="h-title">${safe(app?.fullName) || "Applicant"}</h1>
+          <p class="h-sub">
+            ${safe(formTitle)}
+            ${submitted ? " • Submitted: " + submitted : ""}
+          </p>
+          <div class="h-tags">
+            ${statusChip}
+          </div>
+        </div>
+      </header>
+
+      ${positionsBlock}
+
+      ${sectionCard("Contact", contact ? `<div>${contact}</div>` : "")}
+      ${sectionCard("Profile", profile ? `<div>${profile}</div>` : "")}
+      ${sectionCard(
+        "Preferences",
+        preferences ? `<div>${preferences}</div>` : ""
+      )}
+      ${sectionCard("Review", review ? `<div>${review}</div>` : "")}
+
+      <div class="footer">Generated ${new Date().toLocaleString()}</div>
+    </div>
+  </body>
+  </html>
+  `;
+  };
+
+  const downloadCVDoc = (app, formTitle = "Application") => {
+    const html = buildCVHtml(app, formTitle);
+    const blob = new Blob([html], { type: "application/msword" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    const nameSafe = (app?.fullName || "Applicant").replace(/\s+/g, "_");
+    a.href = url;
+    a.download = `${nameSafe}_CV.doc`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  };
 
   const renderDashboard = () => (
     <div className="dashboard-overview card">
@@ -738,6 +965,7 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
                 </th>
                 <th>Status</th>
                 <th className="hide-sm">Actions</th>
+                <th>CV</th> {/* <-- NEW */}
               </tr>
             </thead>
             <tbody>
@@ -789,6 +1017,15 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
                       <option value="rejected">Rejected</option>
                       <option value="completed">Completed</option>
                     </select>
+                  </td>
+                  <td data-label="CV" onClick={(e) => e.stopPropagation()}>
+                    <button
+                      className="btn"
+                      onClick={() => downloadCVDoc(app, "Hospitality")}
+                      title="Download CV"
+                    >
+                      Download CV
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -863,6 +1100,7 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
                   Status
                 </th>
                 <th className="hide-sm">Actions</th>
+                <th>CV</th> {/* <-- NEW */}
               </tr>
             </thead>
             <tbody>
@@ -911,6 +1149,17 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
                       <option value="rejected">Rejected</option>
                       <option value="completed">Completed</option>
                     </select>
+                  </td>
+                  <td data-label="CV" onClick={(e) => e.stopPropagation()}>
+                    <button
+                      className="btn"
+                      onClick={() =>
+                        downloadCVDoc(app, formTitles[type] || "Application")
+                      }
+                      title="Download CV"
+                    >
+                      Download CV
+                    </button>
                   </td>
                 </tr>
               ))}

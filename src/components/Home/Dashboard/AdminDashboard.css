@@ -529,6 +529,16 @@ body { margin: 0; }
   gap: 10px;
 }
 
+.table .btn {
+  padding: 0.35rem 0.7rem;
+  font-size: 0.85rem;
+  border-radius: 6px;
+}
+
+.table td[data-label="CV"] .btn {
+  white-space: nowrap;
+}
+
 /* Responsive */
 .hide-sm { display: table-cell; }
 .hide-md { display: table-cell; }

@@ -43,7 +43,7 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
   const [applications, setApplications] = useState({
     hospitality: [],
     germany: [],
-    civil: [],
+    helthcareinbrunei: [],
     domestic: [],
     tailoriron: [],
     pipefitter: [],
@@ -125,7 +125,9 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
           (app) => app.jobtitle === "hospitality"
         ),
         germany: data.filter((app) => app.jobtitle === "germany"),
-        civil: data.filter((app) => app.jobtitle === "civil"),
+        helthcareinbrunei: data.filter(
+          (app) => app.jobtitle === "helthcareinbrunei"
+        ),
         domestic: data.filter((app) => app.jobtitle === "domestic"),
         tailoriron: data.filter((app) => app.jobtitle === "tailoriron"),
         pipefitter: data.filter((app) => app.jobtitle === "pipefitter"),
@@ -437,11 +439,11 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
       color: "germany",
     },
     {
-      key: "civil",
+      key: "helthcareinbrunei",
       icon: <FaHelmetSafety />,
-      title: "Civil Applications",
-      value: applications.civil.length,
-      color: "civil",
+      title: "Health Care & Nursing Careers in Brunei Applications",
+      value: applications.helthcareinbrunei.length,
+      color: "helthcareinbrunei",
     },
     {
       key: "domestic",
@@ -811,7 +813,7 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
     const formTitles = {
       hospitality: "Hospitality",
       germany: "Germany",
-      civil: "Civil",
+      helthcareinbrunei: "Healthcare & Nursing Brunei",
       domestic: "Domestic",
       mechanical: "Mechanical Workers",
       pipefitter: "Pipe Fitter",
@@ -982,14 +984,16 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
           </div>
 
           <div
-            className={`menu-item ${activeTab === "civil" ? "active" : ""}`}
+            className={`menu-item ${
+              activeTab === "helthcareinbrunei" ? "active" : ""
+            }`}
             onClick={() => {
-              setActiveTab("civil");
+              setActiveTab("helthcareinbrunei");
               setSidebarOpen(false);
             }}
           >
             <FaHelmetSafety />
-            <span>Civil</span>
+            <span>Healthcare & Nursing Careers in Brunei</span>
           </div>
 
           <div
@@ -1110,7 +1114,8 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
           {activeTab === "hospitality" &&
             renderApplicationsTable("hospitality")}
           {activeTab === "germany" && renderApplicationsTable("germany")}
-          {activeTab === "civil" && renderApplicationsTable("civil")}
+          {activeTab === "helthcareinbrunei" &&
+            renderApplicationsTable("helthcareinbrunei")}
           {activeTab === "domestic" && renderApplicationsTable("domestic")}
           {/* New job categories */}
           {activeTab === "mechanical" && renderApplicationsTable("mechanical")}

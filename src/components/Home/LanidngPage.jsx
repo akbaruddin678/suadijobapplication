@@ -144,22 +144,44 @@ const LandingPage = () => {
       <header className={`header ${isScrolled ? "scrolled" : ""}`}>
         <div className="container">
           <div className="logo">
-            <h2>{isSmallScreen ? "CISD" : "College of International Skill Developments"}</h2>
+            <h2>
+              {isSmallScreen
+                ? "CISD"
+                : "College of International Skill Developments"}
+            </h2>
           </div>
 
           <nav className={`nav ${isMenuOpen ? "active" : ""}`}>
             <div className="nav-buttons">
-              <button className="btn btn-primary" onClick={() => { closeMenu(); handleApply(); }}>
+              <button
+                className="btn btn-primary"
+                onClick={() => {
+                  closeMenu();
+                  handleApply();
+                }}
+              >
                 Apply For Jobs
               </button>
-              <button className="btn btn-primary" onClick={() => { closeMenu(); handleApplyItaly(); }}>
+              <button
+                className="btn btn-primary"
+                onClick={() => {
+                  closeMenu();
+                  handleApplyItaly();
+                }}
+              >
                 Enroll in Italy Courses
               </button>
             </div>
           </nav>
 
-          <button className={`menu-toggle ${isMenuOpen ? "active" : ""}`} onClick={toggleMenu} aria-label="Toggle menu">
-            <span></span><span></span><span></span>
+          <button
+            className={`menu-toggle ${isMenuOpen ? "active" : ""}`}
+            onClick={toggleMenu}
+            aria-label="Toggle menu"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
           </button>
         </div>
       </header>
@@ -169,7 +191,10 @@ const LandingPage = () => {
         <div className="container">
           <div className="hero-content">
             <h1>Global Career Opportunities</h1>
-            <p>Discover your path to international employment with our diverse job offerings</p>
+            <p>
+              Discover your path to international employment with our diverse
+              job offerings
+            </p>
 
             <div className="hero-stats">
               <div className="stat">
@@ -187,18 +212,27 @@ const LandingPage = () => {
             </div>
 
             <div className="cta-center" style={{ marginBottom: "5rem" }}>
-              <div className="hero-buttons" style={{
-                marginTop:"2rem",
-                display:"flex",
-                gap:"0.5rem",
-                justifyContent:"center",
-                alignItems:"center"
-              }}>
-                <button className="btn btn-secondary" onClick={() => handleApply()}>
+              <div
+                className="hero-buttons"
+                style={{
+                  marginTop: "2rem",
+                  display: "flex",
+                  gap: "0.5rem",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => handleApply()}
+                >
                   Explore All Jobs
                 </button>
-                <button className="btn btn-secondary" onClick={() => handleApplyItaly()}>
-                  Enroll in Italy Courses 
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => handleApplyItaly()}
+                >
+                  Enroll in Italy Courses
                 </button>
               </div>
             </div>
@@ -210,19 +244,34 @@ const LandingPage = () => {
                 <h4>Italy Programs</h4>
                 <p>Enroll in Italy Courses</p>
                 <span>Training & Placement</span>
-                <button className="btn-apply" onClick={() => handleApplyItaly()}>Apply Now</button>
+                <button
+                  className="btn-apply"
+                  onClick={() => handleApplyItaly()}
+                >
+                  Apply Now
+                </button>
               </div>
               <div className="floating-card card-2">
                 <h4>Hospitality</h4>
                 <p>Hotels & Restaurants • Saudi Arabia</p>
                 <span>Attractive Package</span>
-                <button className="btn-apply" onClick={() => handleApply("hospitality")}>Apply Now</button>
+                <button
+                  className="btn-apply"
+                  onClick={() => handleApply("hospitality")}
+                >
+                  Apply Now
+                </button>
               </div>
               <div className="floating-card card-3">
                 <h4>Germany Internship</h4>
                 <p>Professional Development • Germany</p>
                 <span>Career Growth</span>
-                <button className="btn-apply" onClick={() => handleApply("germany")}>Apply Now</button>
+                <button
+                  className="btn-apply"
+                  onClick={() => handleApply("germany")}
+                >
+                  Apply Now
+                </button>
               </div>
             </div>
           </div>
@@ -236,18 +285,24 @@ const LandingPage = () => {
             <h2>🌟 Featured Opportunity</h2>
             <p>Don't miss this unique chance to join our Italy courses!</p>
           </div>
-          <div 
-            className={`featured-job-link ${animateCards ? 'animate-in' : ''}`}
-            style={{ animationDelay: '0.1s' }}
+          <div
+            className={`featured-job-link ${animateCards ? "animate-in" : ""}`}
+            style={{ animationDelay: "0.1s" }}
             onClick={() => handleApplyItaly()}
           >
-            <div 
+            <div
               className="featured-job-card"
-              style={{ '--accent-color': featuredItalyJobs.color }}
+              style={{ "--accent-color": featuredItalyJobs.color }}
             >
-              <div className="featured-job-bg" style={{ background: featuredItalyJobs.gradient }}></div>
+              <div
+                className="featured-job-bg"
+                style={{ background: featuredItalyJobs.gradient }}
+              ></div>
               <div className="featured-job-content">
-                <div className="featured-job-icon" style={{ background: featuredItalyJobs.gradient }}>
+                <div
+                  className="featured-job-icon"
+                  style={{ background: featuredItalyJobs.gradient }}
+                >
                   <FaGlobeEurope size={32} />
                 </div>
                 <div className="featured-job-text">
@@ -281,24 +336,66 @@ const LandingPage = () => {
           <div className="job-types-grid">
             <div className="job-type-card">
               <div className="job-type-icon">🏗️</div>
-              <h3>Civil Workers</h3>
-              <p>Educational program applications for skilled civil workers seeking international opportunities.</p>
+              <h3>Healthcare & Nursing Careers in Brunei</h3>
+              <p>
+                The College of International Skills Development (CISD) is hiring
+                experienced nurses and doctors for exciting healthcare careers
+                in Brunei. With competitive salaries, comprehensive benefits,
+                and excellent career growth opportunities, this is a golden
+                chance to work in one of Asia’s most promising healthcare
+                systems.
+              </p>
               <ul>
-                <li>Construction Specialists</li>
-                <li>Skilled Laborers</li>
-                <li>Project Assistants</li>
-                <li>Technical Roles</li>
-                <li>And more...</li>
+                <li>
+                  <strong>📌 Job Opportunities</strong>
+                  <ul>
+                    <li>
+                      <strong>Doctors</strong> (GP, Medical Officers,
+                      Consultants, Specialists, Registrars, etc.) 💰 Salary: PKR
+                      650K – 3.3M / £1,740 – £8,700 (depending on role &
+                      specialization)
+                    </li>
+                  </ul>
+                </li>
+
+                <li>
+                  <strong>📌 Requirements</strong>
+                  <ul>
+                    <li>
+                      Only experienced nurses and doctors will be considered.
+                    </li>
+                    <li>
+                      Applicants must meet professional qualifications and
+                      relevant work experience.
+                    </li>
+                  </ul>
+                </li>
+
+                <li>
+                  <strong>📌 Benefits</strong>
+                  <ul>
+                    <li>🏠 Free Accommodation</li>
+                    <li>💰 1-Month Bonus</li>
+                    <li>🎁 10% Gratuity</li>
+                    <li>🏖 Paid Leave</li>
+                  </ul>
+                </li>
               </ul>
-              <button className="btn btn-primary" onClick={() => handleApply("civil")}>
-                Apply for Civil Jobs
+              <button
+                className="btn btn-primary"
+                onClick={() => handleApply("helthcareinbrunei")}
+              >
+                Apply for Healthcare & Nursing Careers in Brunei
               </button>
             </div>
 
             <div className="job-type-card">
               <div className="job-type-icon">🏨</div>
               <h3>Hospitality Jobs</h3>
-              <p>Join the thriving hospitality industry with positions in hotels, restaurants, and resorts globally.</p>
+              <p>
+                Join the thriving hospitality industry with positions in hotels,
+                restaurants, and resorts globally.
+              </p>
               <ul>
                 <li>Hostess/Host</li>
                 <li>Barista</li>
@@ -306,7 +403,10 @@ const LandingPage = () => {
                 <li>Room Attendant</li>
                 <li>And more...</li>
               </ul>
-              <button className="btn btn-secondary" onClick={() => handleApply("hospitality")}>
+              <button
+                className="btn btn-secondary"
+                onClick={() => handleApply("hospitality")}
+              >
                 Apply for Hospitality
               </button>
             </div>
@@ -314,7 +414,10 @@ const LandingPage = () => {
             <div className="job-type-card">
               <div className="job-type-icon">🏠</div>
               <h3>Domestic Jobs</h3>
-              <p>Work in private households with competitive packages and comfortable working environments.</p>
+              <p>
+                Work in private households with competitive packages and
+                comfortable working environments.
+              </p>
               <ul>
                 <li>Domestic Worker</li>
                 <li>Nanny/Babysitter</li>
@@ -322,7 +425,10 @@ const LandingPage = () => {
                 <li>Cook/Chef</li>
                 <li>And more...</li>
               </ul>
-              <button className="btn btn-primary" onClick={() => handleApply("domestic")}>
+              <button
+                className="btn btn-primary"
+                onClick={() => handleApply("domestic")}
+              >
                 Apply for Domestic
               </button>
             </div>
@@ -330,7 +436,10 @@ const LandingPage = () => {
             <div className="job-type-card">
               <div className="job-type-icon">🇩🇪</div>
               <h3>Germany Internship</h3>
-              <p>Professional internship opportunities in Germany with career development and cultural experience.</p>
+              <p>
+                Professional internship opportunities in Germany with career
+                development and cultural experience.
+              </p>
               <ul>
                 <li>Technical Internships</li>
                 <li>Hospitality Training</li>
@@ -338,13 +447,16 @@ const LandingPage = () => {
                 <li>Business Programs</li>
                 <li>And more...</li>
               </ul>
-              <button className="btn btn-secondary" onClick={() => handleApply("germany")}>
+              <button
+                className="btn btn-secondary"
+                onClick={() => handleApply("germany")}
+              >
                 Apply for Germany
               </button>
             </div>
           </div>
 
-          <div style={{ textAlign: 'center', marginTop: '3rem' }}>
+          <div style={{ textAlign: "center", marginTop: "3rem" }}>
             <button className="btn btn-primary" onClick={() => handleApply()}>
               View All Job Categories
             </button>
@@ -357,19 +469,47 @@ const LandingPage = () => {
         <div className="container">
           <div className="section-header">
             <h2>Featured Job Opportunities</h2>
-            <p>Discover exciting positions with competitive packages and benefits</p>
+            <p>
+              Discover exciting positions with competitive packages and benefits
+            </p>
           </div>
 
           {/* Hospitality Carousel */}
           <div className="carousel-section">
             <div className="carousel-header">
-              <h3 className="carousel-title"><span className="carousel-icon">🏨</span>Hospitality Positions</h3>
+              <h3 className="carousel-title">
+                <span className="carousel-icon">🏨</span>Hospitality Positions
+              </h3>
               <div className="carousel-controls">
-                <button className="carousel-control-btn" onClick={prevHospitalitySlide} aria-label="Previous">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                <button
+                  className="carousel-control-btn"
+                  onClick={prevHospitalitySlide}
+                  aria-label="Previous"
+                >
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M15 18L9 12L15 6"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
                 </button>
-                <button className="carousel-control-btn" onClick={nextHospitalitySlide} aria-label="Next">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                <button
+                  className="carousel-control-btn"
+                  onClick={nextHospitalitySlide}
+                  aria-label="Next"
+                >
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M9 18L15 12L9 6"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
                 </button>
               </div>
             </div>
@@ -383,7 +523,11 @@ const LandingPage = () => {
               <div className="carousel-track">
                 <div
                   className="carousel-slide"
-                  style={{ transform: `translateX(-${hospitalityCurrentIndex * (100 / getItemsPerSlide())}%)` }}
+                  style={{
+                    transform: `translateX(-${
+                      hospitalityCurrentIndex * (100 / getItemsPerSlide())
+                    }%)`,
+                  }}
                 >
                   {hospitalityPositions.map((position, idx) => (
                     <div key={idx} className="carousel-item">
@@ -391,10 +535,24 @@ const LandingPage = () => {
                         <div className="position-icon">{position.icon}</div>
                         <h4>{position.title}</h4>
                         <p>{position.description}</p>
-                        <button className="btn-apply-now" onClick={() => handleApply("hospitality")}>
+                        <button
+                          className="btn-apply-now"
+                          onClick={() => handleApply("hospitality")}
+                        >
                           Apply Now
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                          >
+                            <path
+                              d="M5 12H19M19 12L12 5M19 12L12 19"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
                           </svg>
                         </button>
                       </div>
@@ -408,8 +566,12 @@ const LandingPage = () => {
               {Array.from({ length: hospitalityDots }).map((_, dotIdx) => (
                 <button
                   key={dotIdx}
-                  className={`carousel-indicator ${dotIdx === activeHospitalityDot ? "active" : ""}`}
-                  onClick={() => setHospitalityCurrentIndex(dotIdx * getItemsPerSlide())}
+                  className={`carousel-indicator ${
+                    dotIdx === activeHospitalityDot ? "active" : ""
+                  }`}
+                  onClick={() =>
+                    setHospitalityCurrentIndex(dotIdx * getItemsPerSlide())
+                  }
                   aria-label={`Go to slide ${dotIdx + 1}`}
                 />
               ))}
@@ -419,13 +581,39 @@ const LandingPage = () => {
           {/* Domestic Carousel */}
           <div className="carousel-section">
             <div className="carousel-header">
-              <h3 className="carousel-title"><span className="carousel-icon">🏠</span>Domestic Positions</h3>
+              <h3 className="carousel-title">
+                <span className="carousel-icon">🏠</span>Domestic Positions
+              </h3>
               <div className="carousel-controls">
-                <button className="carousel-control-btn" onClick={prevDomesticSlide} aria-label="Previous">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                <button
+                  className="carousel-control-btn"
+                  onClick={prevDomesticSlide}
+                  aria-label="Previous"
+                >
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M15 18L9 12L15 6"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
                 </button>
-                <button className="carousel-control-btn" onClick={nextDomesticSlide} aria-label="Next">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                <button
+                  className="carousel-control-btn"
+                  onClick={nextDomesticSlide}
+                  aria-label="Next"
+                >
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M9 18L15 12L9 6"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
                 </button>
               </div>
             </div>
@@ -439,7 +627,11 @@ const LandingPage = () => {
               <div className="carousel-track">
                 <div
                   className="carousel-slide"
-                  style={{ transform: `translateX(-${domesticCurrentIndex * (100 / getItemsPerSlide())}%)` }}
+                  style={{
+                    transform: `translateX(-${
+                      domesticCurrentIndex * (100 / getItemsPerSlide())
+                    }%)`,
+                  }}
                 >
                   {domesticPositions.map((position, idx) => (
                     <div key={idx} className="carousel-item">
@@ -447,10 +639,24 @@ const LandingPage = () => {
                         <div className="position-icon">{position.icon}</div>
                         <h4>{position.title}</h4>
                         <p>{position.description}</p>
-                        <button className="btn-apply-now" onClick={() => handleApply("domestic")}>
+                        <button
+                          className="btn-apply-now"
+                          onClick={() => handleApply("domestic")}
+                        >
                           Apply Now
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                          >
+                            <path
+                              d="M5 12H19M19 12L12 5M19 12L12 19"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
                           </svg>
                         </button>
                       </div>
@@ -464,8 +670,12 @@ const LandingPage = () => {
               {Array.from({ length: domesticDots }).map((_, dotIdx) => (
                 <button
                   key={dotIdx}
-                  className={`carousel-indicator ${dotIdx === activeDomesticDot ? "active" : ""}`}
-                  onClick={() => setDomesticCurrentIndex(dotIdx * getItemsPerSlide())}
+                  className={`carousel-indicator ${
+                    dotIdx === activeDomesticDot ? "active" : ""
+                  }`}
+                  onClick={() =>
+                    setDomesticCurrentIndex(dotIdx * getItemsPerSlide())
+                  }
                   aria-label={`Go to slide ${dotIdx + 1}`}
                 />
               ))}
@@ -486,37 +696,49 @@ const LandingPage = () => {
               <div className="step-number">🏠</div>
               <h3>Free Accommodation</h3>
               <p>Comfortable housing provided at no cost to our employees.</p>
-              <button className="btn-apply-small" onClick={() => handleApply()}>Apply</button>
+              <button className="btn-apply-small" onClick={() => handleApply()}>
+                Apply
+              </button>
             </div>
             <div className="step">
               <div className="step-number">🍽️</div>
               <h3>3 Meals Daily / 300 SAR Allowance</h3>
               <p>Enjoy nutritious meals provided or receive meal allowance.</p>
-              <button className="btn-apply-small" onClick={() => handleApply()}>Apply</button>
+              <button className="btn-apply-small" onClick={() => handleApply()}>
+                Apply
+              </button>
             </div>
             <div className="step">
               <div className="step-number">🚌</div>
               <h3>Transportation Provided</h3>
               <p>Convenient transport to and from work locations.</p>
-              <button className="btn-apply-small" onClick={() => handleApply()}>Apply</button>
+              <button className="btn-apply-small" onClick={() => handleApply()}>
+                Apply
+              </button>
             </div>
             <div className="step">
               <div className="step-number">🏥</div>
               <h3>Medical Insurance</h3>
               <p>Comprehensive health coverage for your peace of mind.</p>
-              <button className="btn-apply-small" onClick={() => handleApply()}>Apply</button>
+              <button className="btn-apply-small" onClick={() => handleApply()}>
+                Apply
+              </button>
             </div>
             <div className="step">
               <div className="step-number">✈️</div>
               <h3>Exit Ticket After Contract</h3>
               <p>Return flight ticket provided upon completion of contract.</p>
-              <button className="btn-apply-small" onClick={() => handleApply()}>Apply</button>
+              <button className="btn-apply-small" onClick={() => handleApply()}>
+                Apply
+              </button>
             </div>
             <div className="step">
               <div className="step-number">💰</div>
               <h3>Paid Holidays & Overtime</h3>
               <p>Enjoy paid public holidays and overtime compensation.</p>
-              <button className="btn-apply-small" onClick={() => handleApply()}>Apply</button>
+              <button className="btn-apply-small" onClick={() => handleApply()}>
+                Apply
+              </button>
             </div>
           </div>
         </div>
@@ -533,22 +755,30 @@ const LandingPage = () => {
             <div className="detail-card">
               <h3>📝 Contract</h3>
               <p>2-Year Contract (Renewable)</p>
-              <button className="btn-apply-small" onClick={() => handleApply()}>Apply</button>
+              <button className="btn-apply-small" onClick={() => handleApply()}>
+                Apply
+              </button>
             </div>
             <div className="detail-card">
               <h3>⏰ Working Hours</h3>
               <p>9-Hour Shifts + Weekly Off</p>
-              <button className="btn-apply-small" onClick={() => handleApply()}>Apply</button>
+              <button className="btn-apply-small" onClick={() => handleApply()}>
+                Apply
+              </button>
             </div>
             <div className="detail-card">
               <h3>🎉 Holidays</h3>
               <p>Paid Public Holidays & Overtime</p>
-              <button className="btn-apply-small" onClick={() => handleApply()}>Apply</button>
+              <button className="btn-apply-small" onClick={() => handleApply()}>
+                Apply
+              </button>
             </div>
             <div className="detail-card">
               <h3>💰 Salary</h3>
               <p>Attractive Monthly Salary + Performance Bonuses</p>
-              <button className="btn-apply-small" onClick={() => handleApply()}>Apply</button>
+              <button className="btn-apply-small" onClick={() => handleApply()}>
+                Apply
+              </button>
             </div>
           </div>
         </div>
@@ -559,12 +789,25 @@ const LandingPage = () => {
         <div className="container">
           <div className="cta-content">
             <h2>Ready to Start Your International Career?</h2>
-            <p>Join thousands of successful professionals who have found their dream jobs through our platform</p>
+            <p>
+              Join thousands of successful professionals who have found their
+              dream jobs through our platform
+            </p>
             <div className="cta-buttons">
-              <button className="btn btn-secondary" onClick={() => handleApply()}>
+              <button
+                className="btn btn-secondary"
+                onClick={() => handleApply()}
+              >
                 Browse All Jobs
               </button>
-              <button className="btn btn-outline" onClick={() => document.getElementById('job-types').scrollIntoView({ behavior: 'smooth' })}>
+              <button
+                className="btn btn-outline"
+                onClick={() =>
+                  document
+                    .getElementById("job-types")
+                    .scrollIntoView({ behavior: "smooth" })
+                }
+              >
                 Explore Categories
               </button>
             </div>
@@ -578,17 +821,68 @@ const LandingPage = () => {
           <div className="footer-content">
             <div className="footer-section">
               <h3>College of International Skill Developments</h3>
-              <p>Connecting talent with international opportunities across multiple industries and countries</p>
+              <p>
+                Connecting talent with international opportunities across
+                multiple industries and countries
+              </p>
             </div>
 
             <div className="footer-section">
               <h4>Job Categories</h4>
-              <a href="#" onClick={(e) => { e.preventDefault(); handleApply("civil"); }}>Civil Workers</a>
-              <a href="#" onClick={(e) => { e.preventDefault(); handleApply("hospitality"); }}>Hospitality Jobs</a>
-              <a href="#" onClick={(e) => { e.preventDefault(); handleApply("domestic"); }}>Domestic Jobs</a>
-              <a href="#" onClick={(e) => { e.preventDefault(); handleApply("germany"); }}>Germany Internship</a>
-              <a href="#" onClick={(e) => { e.preventDefault(); handleApply("mechanical"); }}>Mechanical Workers</a>
-              <a href="#" onClick={(e) => { e.preventDefault(); handleApply("pipefitter"); }}>Pipe Fitter</a>
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleApply("helthcareinbrunei");
+                }}
+              >
+                 Healthcare & Nursing Careers in Brunei
+              </a>
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleApply("hospitality");
+                }}
+              >
+                Hospitality Jobs
+              </a>
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleApply("domestic");
+                }}
+              >
+                Domestic Jobs
+              </a>
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleApply("germany");
+                }}
+              >
+                Germany Internship
+              </a>
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleApply("mechanical");
+                }}
+              >
+                Mechanical Workers
+              </a>
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleApply("pipefitter");
+                }}
+              >
+                Pipe Fitter
+              </a>
             </div>
 
             <div className="footer-section">
@@ -600,9 +894,18 @@ const LandingPage = () => {
           </div>
 
           <div className="footer-bottom">
-            <p>&copy; 2025 College of International Skill Developments. All rights reserved.</p>
+            <p>
+              &copy; 2025 College of International Skill Developments. All
+              rights reserved.
+            </p>
             {/* Add Admin Login Button */}
-            <button className="btn btn-admin" onClick={() => { closeMenu(); handleAdminLogin(); }}>
+            <button
+              className="btn btn-admin"
+              onClick={() => {
+                closeMenu();
+                handleAdminLogin();
+              }}
+            >
               Admin Login
             </button>
           </div>
@@ -610,7 +913,17 @@ const LandingPage = () => {
       </footer>
 
       {/* Click-away overlay for mobile nav */}
-      {isMenuOpen && <div onClick={closeMenu} style={{position:"fixed", inset:0, background:"rgba(0,0,0,0.25)", zIndex:999}} />}
+      {isMenuOpen && (
+        <div
+          onClick={closeMenu}
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.25)",
+            zIndex: 999,
+          }}
+        />
+      )}
     </div>
   );
 };

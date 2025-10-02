@@ -117,7 +117,7 @@ function App() {
               element={<ApplicationFormDomestic />}
             />
             <Route
-              path="application-civil"
+              path="application-helthcareinbrunei"
               element={<ApplicationFormCivil />}
             />
             <Route

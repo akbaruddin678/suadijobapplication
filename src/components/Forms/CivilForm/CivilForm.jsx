@@ -4,7 +4,7 @@ import saudiHeroImage from "../../../assets/react.svg";
 
 const ApplicationForm = () => {
   const [formData, setFormData] = useState({
-    jobtitle: "civil",
+    jobtitle: "helthcareinbrunei",
     fullName: "",
     age: "",
     gender: "",
@@ -30,11 +30,15 @@ const ApplicationForm = () => {
 
   // Updated to trade positions with single selection
   const positionOptions = [
-    "Electrician",
-    "Plumber",
-    "Mason",
-    "Steel Fixer",
-    "Scaffolder",
+    "General Practitioner (GP)",
+    "Consultant",
+    "Nurse",
+    "Senior Nurse",
+    "Nurse Officer / Manager",
+    "Matron",
+    "Specialist",
+    "Medical Officer",
+    "Registrar",
     "Other",
   ];
 
@@ -180,7 +184,7 @@ const ApplicationForm = () => {
         <div className="hero-overlay">
           <div className="hero-content">
             <h1 className="hero-title">
-              Saudi Arabia Job Application For Skilled Trades
+              Healthcare & Nursing Careers in Brunei
             </h1>
             <p
               style={{
@@ -188,7 +192,7 @@ const ApplicationForm = () => {
               }}
               className="hero-subtitle"
             >
-              Construction & Technical Opportunities 2025-26
+              Healthcare & Nursing Careers Opportunities 2025-26
             </p>
           </div>
         </div>
@@ -198,7 +202,9 @@ const ApplicationForm = () => {
       <div className="form-wrapper">
         <div className="form-card slide-up">
           <div className="form-header">
-            <h1 className="form-title">Skilled Trades Application</h1>
+            <h1 className="form-title">
+              Healthcare & Nursing Careers in Brunei Application
+            </h1>
             <p className="form-description">
               Complete all sections to submit your application
             </p>
@@ -227,7 +233,11 @@ const ApplicationForm = () => {
                 </div>
 
                 <div className="form-grid">
-                  <input type="hidden" name="jobtitle" value="civil" />
+                  <input
+                    type="hidden"
+                    name="jobtitle"
+                    value="helthcareinbrunei"
+                  />
 
                   <div className="form-group">
                     <label className="form-label" htmlFor="fullName">
@@ -652,7 +662,8 @@ const ApplicationForm = () => {
 
                 <div className="form-group full-width">
                   <label className="form-label">
-                    Have you ever worked in Saudi Arabia before?{" "}
+                    Do you have previous experience working in healthcare
+                    outside your home country (e.g., Brunei)?{" "}
                     <span className="required-asterisk">*</span>
                   </label>
                   <div className="radio-group">
@@ -690,7 +701,7 @@ const ApplicationForm = () => {
 
                 <div className="form-group full-width">
                   <label className="form-label" htmlFor="whyWorkInSaudi">
-                    Why do you want to work in Saudi Arabia?{" "}
+                    Why do you want to work in Brunei’s healthcare sector?{" "}
                     <span className="required-asterisk">*</span>
                   </label>
                   <textarea
@@ -703,7 +714,7 @@ const ApplicationForm = () => {
                       handleChange("whyWorkInSaudi", e.target.value)
                     }
                     rows={4}
-                    placeholder="Please explain your reasons for wanting to work in Saudi Arabia..."
+                    placeholder="Please explain your reasons ..."
                   />
                   {errors.whyWorkInSaudi && (
                     <div className="error-message">{errors.whyWorkInSaudi}</div>

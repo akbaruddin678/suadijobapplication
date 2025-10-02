@@ -40,58 +40,58 @@ const JobSelection = () => {
   // Regular job options
   const jobOptions = [
     {
-      id: 'civil',
-      title: 'Civil Workers',
-      description: 'For educational program applications',
+      id: "helthcareinbrunei",
+      title: "Healthcare & Nursing Careers in Brunei",
+      description: "For educational program applications",
       icon: faGraduationCap,
-      path: 'application-civil',
-      color: '#4e73df',
-      gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+      path: "application-helthcareinbrunei",
+      color: "#4e73df",
+      gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
     },
-    { 
-      id: 'hospitality',
-      title: 'Hospitality Jobs',
-      description: 'Apply for positions in hospitality industry',
+    {
+      id: "hospitality",
+      title: "Hospitality Jobs",
+      description: "Apply for positions in hospitality industry",
       icon: faConciergeBell,
-      path: 'application-hospitality',
-      color: '#1cc88a',
-      gradient: 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)'
+      path: "application-hospitality",
+      color: "#1cc88a",
+      gradient: "linear-gradient(135deg, #11998e 0%, #38ef7d 100%)",
     },
     {
-      id: 'domestic',
-      title: 'Domestic Jobs',
-      description: 'Apply for domestic helper positions',
+      id: "domestic",
+      title: "Domestic Jobs",
+      description: "Apply for domestic helper positions",
       icon: faHome,
-      path: 'application-domestic',
-      color: '#f6c23e',
-      gradient: 'linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%)'
+      path: "application-domestic",
+      color: "#f6c23e",
+      gradient: "linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%)",
     },
     {
-      id: 'germany',
-      title: 'Germany Internship',
-      description: 'Apply for internship positions in Germany',
+      id: "germany",
+      title: "Germany Internship",
+      description: "Apply for internship positions in Germany",
       icon: faGlobeEurope,
-      path: 'application-germany',
-      color: '#e74a3b',
-      gradient: 'linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)'
+      path: "application-germany",
+      color: "#e74a3b",
+      gradient: "linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)",
     },
     {
-      id: 'mechanical',
-      title: 'Mechanical Workers',
-      description: 'Apply for the jobs in abroad',
+      id: "mechanical",
+      title: "Mechanical Workers",
+      description: "Apply for the jobs in abroad",
       icon: faTools,
-      path: 'application-mechanical',
-      color: '#36b9cc',
-      gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'
+      path: "application-mechanical",
+      color: "#36b9cc",
+      gradient: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
     },
     {
-      id: 'pipefitter',
-      title: 'Pipe Fitter',
-      description: 'Apply for the jobs in Saudia',
+      id: "pipefitter",
+      title: "Pipe Fitter",
+      description: "Apply for the jobs in Saudia",
       icon: faBuilding,
-      path: 'application-pipefitter',
-      color: '#5a67d8',
-      gradient: 'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)'
+      path: "application-pipefitter",
+      color: "#5a67d8",
+      gradient: "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)",
     },
     {
       id: "tailor/ironer",
@@ -111,7 +111,7 @@ const JobSelection = () => {
       color: "#5a67d8",
       gradient: "linear-gradient(135deg, #3a7bd5 0%, #3a6073 100%)",
     },
-  ]
+  ];
 
   return (
     <div style={{

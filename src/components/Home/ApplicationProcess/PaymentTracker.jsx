@@ -27,7 +27,7 @@ const PaymentTracker = ({ applicationId, application }) => {
     if (token) {
       axios
         .get(
-          `https://hungry-hopper.210-56-25-68.plesk.page/api/payments/${applicationId}`,
+          `https://angry-khorana.210-56-25-68.plesk.page/api/payments/${applicationId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -99,7 +99,7 @@ const PaymentTracker = ({ applicationId, application }) => {
 
       axios
         .post(
-          "https://hungry-hopper.210-56-25-68.plesk.page/api/payments",
+          "https://angry-khorana.210-56-25-68.plesk.page/api/payments",
           payment,
           {
             headers: {

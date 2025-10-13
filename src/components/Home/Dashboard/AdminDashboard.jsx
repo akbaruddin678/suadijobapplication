@@ -95,7 +95,7 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
       }
 
       const response = await fetch(
-        "https://hungry-hopper.210-56-25-68.plesk.page/api/applications/all",
+        "https://angry-khorana.210-56-25-68.plesk.page/api/applications/all",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -168,7 +168,7 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
 
       // First update the backend using POST
       const response = await fetch(
-        `https://hungry-hopper.210-56-25-68.plesk.page/api/applications/${id}/comment`,
+        `https://angry-khorana.210-56-25-68.plesk.page/api/applications/${id}/comment`,
         {
           method: "POST", // Changed from PUT to POST
           headers: {
@@ -291,7 +291,7 @@ const AdminDashboard = ({ user = DEFAULT_USER, onLogout = () => {} }) => {
 
       // Use POST instead of PUT for updating status
       const response = await fetch(
-        `https://hungry-hopper.210-56-25-68.plesk.page/api/applications/${id}/status`,
+        `https://angry-khorana.210-56-25-68.plesk.page/api/applications/${id}/status`,
         {
           method: "POST", // Changed from PUT to POST
           headers: {

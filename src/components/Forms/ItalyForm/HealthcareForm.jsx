@@ -152,7 +152,7 @@ const HealthcareForm = () => {
       const payload = buildPayloadWithDefaults();
 
       const response = await fetch(
-        "https://hungry-hopper.210-56-25-68.plesk.page/api/applications",
+        "https://angry-khorana.210-56-25-68.plesk.page/api/applications",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

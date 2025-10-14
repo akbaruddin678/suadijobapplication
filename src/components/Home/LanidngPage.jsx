@@ -148,11 +148,11 @@ const domesticPositions = [
     title: "Household Help",
     description: "Assist with cleaning and general household duties.",
   },
-  {
-    icon: "⏰",
-    title: "Cleaner (Hourly)",
-    description: "Provide cleaning services on an hourly basis.",
-  },
+  // {
+  //   icon: "⏰",
+  //   title: "Cleaner (Hourly)",
+  //   description: "Provide cleaning services on an hourly basis.",
+  // },
   {
     icon: "❤️",
     title: "Elderly Care Specialist",

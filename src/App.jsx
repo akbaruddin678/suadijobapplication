@@ -37,28 +37,41 @@ const ProtectedRoute = ({ children }) => {
     const verifyAuth = async () => {
       const token = localStorage.getItem("token");
       const savedUser = localStorage.getItem("user");
-
-      if (token && savedUser) {
-        try {
-          const response = await fetch(
-            "https://angry-khorana.210-56-25-68.plesk.page/api/auth/verify",
-            {
-              headers: { Authorization: `Bearer ${token}` },
-            }
-          );
-          if (response.ok) {
-            setUser(JSON.parse(savedUser));
-          } else {
-            localStorage.removeItem("token");
-            localStorage.removeItem("user");
-          }
-        } catch (error) {
-          console.error("Failed: Try Again:", error);
-          localStorage.removeItem("token");
-          localStorage.removeItem("user");
-        }
+      console.log("Verifying auth with token:", token);
+      // --- IGNORE ---
+      console.log("Verifying auth with token:", savedUser);
+      if (savedUser && token) {
+        setUser(JSON.parse(savedUser));
+        setLoading(false);
+        return;
       }
-      setLoading(false);
+      else{
+         localStorage.removeItem("token");
+            localStorage.removeItem("user");
+
+      }
+
+    //   if (!token && !savedUser) {
+    //     try {
+    //       const response = await fetch(
+    //         "https://angry-khorana.210-56-25-68.plesk.page/api/auth/verify",
+    //         {
+    //           headers: { Authorization: `Bearer ${token}` },
+    //         }
+    //       );
+    //       if (response.ok) {
+    //         setUser(JSON.parse(savedUser));
+    //       } else {
+    //         localStorage.removeItem("token");
+    //         localStorage.removeItem("user");
+    //       }
+    //     } catch (error) {
+    //       console.error("Failed: Try Again:", error);
+    //       localStorage.removeItem("token");
+    //       localStorage.removeItem("user");
+    //     }
+    //   }
+    //   setLoading(false);
     };
 
     verifyAuth();

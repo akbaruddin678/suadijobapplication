@@ -34,7 +34,7 @@ const ApplicationForm = () => {
     "Private Driver",
     "Cook / Chef",
     "Caregiver (Elderly / Special Needs)",
-    "Cleaner (Hourly)",
+    // "Cleaner (Hourly)",
     "Other",
   ];
 
